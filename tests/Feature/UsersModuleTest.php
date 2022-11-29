@@ -29,7 +29,7 @@ class UsersModuleTest extends TestCase
     {
         $this->get('usuarios/nuevo')
             ->assertStatus(200)
-            ->assertSee('creando nuevo usuario');
+            ->assertSee('Creando nuevo usuario');
 
     }
 }
