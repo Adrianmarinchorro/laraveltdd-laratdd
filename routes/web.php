@@ -20,11 +20,11 @@ Route::get('/inicio', function () {
 });
 
 Route::get('/usuarios', function () {
-   return 'Mostrando listado de los usuarios';
+   return 'Usuarios';
 });
 
 Route::get('/usuarios/{id}', function ($id) {
-    return 'Mostrando detalle del usuario ' . $id;
+    return 'Mostrando detalles del usuario: ' . $id;
 })->where('id', '[0-9]+');
 
 Route::get('usuarios/nuevo', function () {
@@ -34,9 +34,9 @@ Route::get('usuarios/nuevo', function () {
 Route::get('/saludo/{name}/{nickname?}', function ($name, $nickname = null){
 
     if($nickname) {
-        return 'saludos ' . $name . ', tu apodo es ' . $nickname;
+        return 'Bienvenido ' . ucfirst($name) . ', tu apodo es ' . $nickname;
     } else {
-        return 'saludos ' . $name . ', no tienes apodo.';
+        return 'Bienvenido ' . ucfirst($name) . ', no tienes apodo.';
     }
 
 
