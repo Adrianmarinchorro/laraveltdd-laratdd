@@ -51,11 +51,11 @@
 <!-- Begin page content -->
 <main role="main" class="flex-shrink-0">
 
-    <div class="row mt-3">
-        <div class="col-8">
+    <div class="row mt-5">
+        <div class="col-8 mt-5">
             @yield('content')
         </div>
-        <div class="col-4">
+        <div class="col-4 mt-5">
             @section('sidebar')
                 <h2>Barra lateral</h2>
             @show
