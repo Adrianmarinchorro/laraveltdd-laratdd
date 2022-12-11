@@ -32,6 +32,22 @@ class UserSeeder extends Seeder
             'email' => 'adri@gmail.com',
             'password' => bcrypt('123'),
             'profession_id' => $professionId, // $profession->id
+            'is_admin' => true,
         ]);
+
+        User::create([
+            'name' => 'another user',
+            'email' => 'another@gmail.com',
+            'password' => bcrypt('123'),
+            'profession_id' => $professionId, // $profession->id
+        ]);
+
+        User::create([
+            'name' => 'another user2',
+            'email' => 'another2@gmail.com',
+            'password' => bcrypt('123'),
+            'profession_id' => null, // $profession->id
+        ]);
+
     }
 }
