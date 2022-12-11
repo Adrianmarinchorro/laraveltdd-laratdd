@@ -27,6 +27,12 @@ class User extends Authenticatable
         'password', 'remember_token',
     ];
 
+    protected $casts = [
+    'is_admin' => 'boolean',
+    ];
+
+    protected $guarded = ['is_admin'];
+
     public static function findByEmail($email)
     {
                 // static es equivalente a User ya que estamos en la clase user
