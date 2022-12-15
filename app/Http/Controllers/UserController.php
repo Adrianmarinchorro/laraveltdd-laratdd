@@ -27,13 +27,11 @@ class UserController extends Controller
         );
     }
 
-    public function show($id)
+    public function show(User $user)
     {
-        $user = User::findOrFail($id);
+        // $user = User::findOrFail($id);
 
-//        if($user == null) {
-//            return response()->view('errors.404', [], 404);
-//        }
+        // dd($user); al enlazarse el modelo a la ruta (eloquent y laravel) nos trae el objeto mediante la llave primaria
 
         return view('users.show', compact('user'));
     }
