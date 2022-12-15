@@ -52,7 +52,10 @@
 <main role="main" class="flex-shrink-0">
 
     <div class="row mt-5">
-        <div class="col-8 mt-5">
+        <div class="col-1 mt-5">
+         <!-- Vacio para centrar el contenido-->
+        </div>
+        <div class="col-7 mt-5">
             @yield('content')
         </div>
         <div class="col-4 mt-5">
