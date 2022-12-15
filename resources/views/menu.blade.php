@@ -7,10 +7,10 @@
     <div class="collapse navbar-collapse" id="navbarCollapse">
         <ul class="navbar-nav mr-auto">
             <li class="nav-item active">
-                <a class="nav-link" href="/usuarios">Lista de usuarios<span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ route('users.index') }}">Lista de usuarios<span class="sr-only">(current)</span></a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="/usuarios/nuevo">Crear usuario</a>
+                <a class="nav-link" href="{{ route('users.create') }}">Crear usuario</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
