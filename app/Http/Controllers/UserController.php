@@ -38,8 +38,11 @@ class UserController extends Controller
 
     public function create()
     {
-        $title = 'Creando nuevo usuario';
+        return view('users.create');
+    }
 
-        return view('create', compact('title'));
+    public function store()
+    {
+        return 'Procesando informacion';
     }
 }
