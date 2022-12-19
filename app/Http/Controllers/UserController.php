@@ -44,11 +44,13 @@ class UserController extends Controller
     public function store()
     {
 
+        // return redirect('/usuarios/nuevo/')->withInput();
+
         $data = request()->validate([
             'name' => 'required',
 
         ], [
-            'name.required' => 'el campo es obligatorio'
+            'name.required' => 'El campo nombre es obligatorio'
         ]);
 
 //        if(empty($data['name'])) {

@@ -108,7 +108,7 @@ class UsersModuleTest extends TestCase
             'password' => '123'
         ])
             ->assertRedirect(route('users.create'))
-            ->assertSessionHasErrors(['name' => 'el campo es obligatorio']);
+            ->assertSessionHasErrors(['name' => 'El campo nombre es obligatorio']);
 
         $this->assertEquals(0, User::count());
 
