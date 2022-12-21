@@ -48,10 +48,15 @@ class UserController extends Controller
 
         $data = request()->validate([
             'name' => 'required',
+            'email' => 'required|email|unique:users,email', // si no se añade regla ya si es capaz de capturar el valor
+            'password' => 'required|digits_between:7,30',
 
         ], [
-            'name.required' => 'El campo nombre es obligatorio'
-        ]);
+            'name.required' => 'El nombre es obligatorio',
+            'email.required' => 'El correo electrónico es obligatorio',
+            'password.required' => 'La contraseña es obligatoria',
+            'password.digits_between' => 'La contraseña debe tener mas de seis caracteres'
+            ]);
 
 //        if(empty($data['name'])) {
 //            return redirect(route('users.create'))->withErrors([

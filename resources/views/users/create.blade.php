@@ -8,13 +8,13 @@
     @if($errors->any())
         <div class="alert alert-danger">
             <h5>Por favor corrige los errores de debajo:</h5>
-            {{--<ul>--}}
-            {{--@foreach($errors->all() as $error)--}}
+            <ul>
+            @foreach($errors->all() as $error)
 
-            {{--<li>{{$error}}</li>--}}
+            <li>{{$error}}</li>
 
-            {{--@endforeach--}}
-            {{--</ul>--}}
+            @endforeach
+            </ul>
         </div>
     @endif
 
@@ -25,9 +25,9 @@
         <label for="name">Nombre:</label>
         <input type="text" name="name" id="name" placeholder="Pepe Pérez" value="{{ old('name') }}">
 
-        @if($errors->has('name'))
-            <p>{{ $errors->first('name') }}</p>
-        @endif
+{{--        @if($errors->has('name'))--}}
+{{--            <p>{{ $errors->first('name') }}</p>--}}
+{{--        @endif--}}
 
         <br>
 
