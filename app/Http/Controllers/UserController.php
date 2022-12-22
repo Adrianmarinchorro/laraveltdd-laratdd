@@ -60,12 +60,6 @@ class UserController extends Controller
             'password.min' => 'La contraseña debe tener mas de seis caracteres'
             ]);
 
-//        if(empty($data['name'])) {
-//            return redirect(route('users.create'))->withErrors([
-//                'name' => 'el campo es obligatorio'
-//            ]);
-//        }
-
         User::create([
             'name' => $data['name'],
             'email' => $data['email'],
@@ -74,4 +68,10 @@ class UserController extends Controller
 
         return redirect()->route('users.index');
     }
+
+    public function edit(User $user)
+    {
+        return view('users.edit', compact('user'));
+    }
+
 }
