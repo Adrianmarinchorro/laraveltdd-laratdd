@@ -148,7 +148,7 @@ class UsersModuleTest extends TestCase
             'password' => '1234567'
         ])
             ->assertRedirect(route('users.create'))
-            ->assertSessionHasErrors(['email']);
+            ->assertSessionHasErrors(['email' => 'El correo electrónico debe ser válido']);
 
         $this->assertEquals(0, User::count());
     }
@@ -170,7 +170,7 @@ class UsersModuleTest extends TestCase
             'password' => '1234567'
         ])
             ->assertRedirect(route('users.create'))
-            ->assertSessionHasErrors(['email']);
+            ->assertSessionHasErrors(['email' => 'El correo electrónico debe ser único']);
 
         $this->assertEquals(1, User::count());
     }

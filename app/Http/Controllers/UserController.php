@@ -49,13 +49,15 @@ class UserController extends Controller
         $data = request()->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users,email', // si no se añade regla ya si es capaz de capturar el valor
-            'password' => 'required|digits_between:7,30',
+            'password' => 'required|min:7',
 
         ], [
             'name.required' => 'El nombre es obligatorio',
             'email.required' => 'El correo electrónico es obligatorio',
+            'email.unique' => 'El correo electrónico debe ser único',
+            'email.email' => 'El correo electrónico debe ser válido',
             'password.required' => 'La contraseña es obligatoria',
-            'password.digits_between' => 'La contraseña debe tener mas de seis caracteres'
+            'password.min' => 'La contraseña debe tener mas de seis caracteres'
             ]);
 
 //        if(empty($data['name'])) {
