@@ -316,28 +316,49 @@ class UsersModuleTest extends TestCase
     {
         // $this->withoutExceptionHandling();
 
-        self::markTestIncomplete();
-        return;
+        factory(User::class)->create([
+            'email' => 'existingmail@example.com'
+        ]);
 
         $user = factory(User::class)->create([
             'email' => 'adrian@gmail.com'
         ]);
 
-        $user2 = factory(User::class)->create([
-            'email' => 'adrian2@gmail.com'
-        ]);
 
         $this->from(route('users.update', ['user' => $user]));
 
         $this->put("/usuarios/{$user->id}", [
             'name' => 'Adrian Marín',
-            'email' => 'adrian2@gmail.com',
+            'email' => 'existingmail@example.com',
             'password' => '1234567'
         ])
             ->assertRedirect(route('users.update', ['user' => $user]))
-            ->assertSessionHasErrors(['email' => 'El correo electrónico debe ser único']);
+            ->assertSessionHasErrors(['email' ]);
 
-        $this->assertEquals(1, User::count());
+
+    }
+
+    /** @test */
+    function the_email_can_stay_the_same_when_updating_the_user()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create([
+            'email' => 'adri@gmail.com',
+        ]);
+
+        $this->from(route('users.edit', ['user' => $user]))
+            ->put("/usuarios/{$user->id}", [
+                'name' => 'Adrian Marín',
+                'email' => 'adri@gmail.com',
+                'password' => '12345678'
+            ])
+            ->assertRedirect(route('users.show', ['user' => $user]));
+
+        $this->assertDatabaseHas('users', [
+            'name' => 'Adrian Marín',
+            'email' => 'adri@gmail.com',
+        ]);
     }
 
     /** @test */
