@@ -58,7 +58,7 @@ class UserController extends Controller
             'email.email' => 'El correo electrónico debe ser válido',
             'password.required' => 'La contraseña es obligatoria',
             'password.min' => 'La contraseña debe tener mas de seis caracteres'
-            ]);
+        ]);
 
         User::create([
             'name' => $data['name'],
@@ -74,4 +74,14 @@ class UserController extends Controller
         return view('users.edit', compact('user'));
     }
 
+    public function update(User $user)
+    {
+        $data = request()->all();
+
+        $data['password'] = bcrypt($data['password']);
+
+        $user->update($data);
+
+        return redirect()->route('users.show', ['user' => $user]);
+    }
 }

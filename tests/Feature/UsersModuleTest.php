@@ -229,4 +229,25 @@ class UsersModuleTest extends TestCase
         });
     }
 
+    /** @test */
+    function it_updates_a_user()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+
+        $this->put("/usuarios/{$user->id}", [
+            'name' => 'Adrián Marín',
+            'email' => 'adri@gmail.com',
+            'password' => '1234567'
+        ])->assertRedirect(route('users.show', ['user' => $user]));
+
+        $this->assertCredentials([
+            'name' => 'Adrián Marín',
+            'email' => 'adri@gmail.com',
+            'password' => '1234567'
+        ]);
+    }
+
 }
