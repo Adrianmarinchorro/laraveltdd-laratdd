@@ -50,7 +50,7 @@ class UsersModuleTest extends TestCase
     {
 
         $user = factory(User::class)->create([
-                'name' => 'Adrián Marín',
+            'name' => 'Adrián Marín',
         ]);
 
         $this->get('/usuarios/' . $user->id)
@@ -92,7 +92,7 @@ class UsersModuleTest extends TestCase
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567'
-            ]);
+        ]);
     }
 
     /** @test */
@@ -159,8 +159,8 @@ class UsersModuleTest extends TestCase
         // $this->withoutExceptionHandling();
 
         factory(User::class)->create([
-                'email' => 'adrian@gmail.com'
-            ]);
+            'email' => 'adrian@gmail.com'
+        ]);
 
         $this->from(route('users.create'));
 
@@ -214,7 +214,7 @@ class UsersModuleTest extends TestCase
     /** @test */
     function it_loads_the_edit_user_page()
     {
-       // $this->withoutExceptionHandling();
+        // $this->withoutExceptionHandling();
 
         $user = factory(User::class)->create();
 
@@ -222,11 +222,11 @@ class UsersModuleTest extends TestCase
         //$this->get('usuarios/editar/', ['id' => $user->id]) uri: usuarios/editar?id=5
         $this->get("usuarios/{$user->id}/editar") // uri: usuarios/5/editar
         ->assertStatus(200)
-        ->assertViewIs('users.edit')
-        ->assertSee('Editar usuario')
-        ->assertViewHas('user', function ($viewUser) use ($user) {
-            return $viewUser->id === $user->id;
-        });
+            ->assertViewIs('users.edit')
+            ->assertSee('Editar usuario')
+            ->assertViewHas('user', function ($viewUser) use ($user) {
+                return $viewUser->id === $user->id;
+            });
     }
 
     /** @test */
@@ -248,6 +248,116 @@ class UsersModuleTest extends TestCase
             'email' => 'adri@gmail.com',
             'password' => '1234567'
         ]);
+    }
+
+    /** @test */
+    function the_name_is_required_when_updating_a_user()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+
+        $this->from("usuarios/{$user->id}/editar")
+            ->put("/usuarios/{$user->id}", [
+                'name' => '',
+                'email' => 'adri@gmail.com',
+                'password' => '1234567'
+            ])->assertRedirect(route('users.edit', ['user' => $user]))
+            ->assertSessionHasErrors(['name' => 'El nombre es obligatorio']);
+
+        $this->assertDatabaseMissing('users', ['email' => 'adri@gmail.com']);
+    }
+
+    /** @test */
+    function the_email_is_required_when_updating_a_user()
+    {
+        // $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from(route('users.edit', ['user' => $user]));
+
+        $this->put("/usuarios/{$user->id}", [
+            'name' => 'Adrian Marín',
+            'email' => '',
+            'password' => '1234567'
+        ])
+            ->assertRedirect(route('users.edit', ['user' => $user]))
+            ->assertSessionHasErrors(['email' => 'El correo electrónico es obligatorio']);
+
+        $this->assertDatabaseMissing('users', ['name' => 'Adrian Marín']);
+    }
+
+
+    /** @test */
+    function the_email_must_be_valid_when_updating_a_user()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from(route('users.edit', ['user' => $user]));
+
+        $this->put("/usuarios/{$user->id}", [
+            'name' => 'Adrian Marín',
+            'email' => 'correo-no-valido',
+            'password' => '1234567'
+        ])
+            ->assertRedirect(route('users.edit', ['user' => $user]))
+            ->assertSessionHasErrors(['email' => 'El correo electrónico debe ser valido']);
+
+
+        $this->assertDatabaseMissing('users', ['name' => 'Adrian Marín']);
+    }
+
+    /** @test */
+    function the_email_must_be_unique_when_updating_a_user()
+    {
+        // $this->withoutExceptionHandling();
+
+        self::markTestIncomplete();
+        return;
+
+        $user = factory(User::class)->create([
+            'email' => 'adrian@gmail.com'
+        ]);
+
+        $user2 = factory(User::class)->create([
+            'email' => 'adrian2@gmail.com'
+        ]);
+
+        $this->from(route('users.update', ['user' => $user]));
+
+        $this->put("/usuarios/{$user->id}", [
+            'name' => 'Adrian Marín',
+            'email' => 'adrian2@gmail.com',
+            'password' => '1234567'
+        ])
+            ->assertRedirect(route('users.update', ['user' => $user]))
+            ->assertSessionHasErrors(['email' => 'El correo electrónico debe ser único']);
+
+        $this->assertEquals(1, User::count());
+    }
+
+    /** @test */
+    function the_password_is_required_when_updating_the_user()
+    {
+        //$this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from(route('users.edit', ['user' => $user]));
+
+        $this->put("/usuarios/{$user->id}", [
+            'name' => 'Adrian Marín',
+            'email' => 'adri@gmail.com',
+            'password' => ''
+        ])
+            ->assertRedirect(route('users.edit', ['user' => $user]))
+            ->assertSessionHasErrors(['password' => 'La contraseña es obligatoria']);
+
+        $this->assertDatabaseMissing('users', ['email' => 'adri@gmail.com']);
     }
 
 }
