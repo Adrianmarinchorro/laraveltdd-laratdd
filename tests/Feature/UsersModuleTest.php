@@ -387,4 +387,19 @@ class UsersModuleTest extends TestCase
         ]);
     }
 
+    /** @test */
+    function it_deletes_a_user()
+    {
+        $this->withoutExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->delete("usuarios/$user->id")
+            ->assertRedirect(route('users.index'));
+
+
+        $this->assertDatabaseMissing('users', ['id' => $user->id]);
+        // $this->assertSame(0, User::count());
+    }
+
 }
