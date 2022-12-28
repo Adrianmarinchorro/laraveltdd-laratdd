@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\{Http\Requests\CreateUserRequest, User, UserProfile};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -42,30 +42,9 @@ class UserController extends Controller
         return view('users.create');
     }
 
-    public function store()
+    public function store(CreateUserRequest $request)
     {
-
-        // return redirect('/usuarios/nuevo/')->withInput();
-
-        $data = request()->validate([
-            'name' => 'required',
-            'email' => 'required|email|unique:users,email', // si no se añade regla ya si es capaz de capturar el valor
-            'password' => 'required|min:7',
-
-        ], [
-            'name.required' => 'El nombre es obligatorio',
-            'email.required' => 'El correo electrónico es obligatorio',
-            'email.unique' => 'El correo electrónico debe ser único',
-            'email.email' => 'El correo electrónico debe ser válido',
-            'password.required' => 'La contraseña es obligatoria',
-            'password.min' => 'La contraseña debe tener mas de seis caracteres'
-        ]);
-
-        User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'password' => bcrypt($data['password']),
-        ]);
+        $request->createUser();
 
         return redirect()->route('users.index');
     }
@@ -88,7 +67,7 @@ class UserController extends Controller
             'email.unique' => 'El correo electrónico debe ser único',
         ]);
 
-        if($data['password'] != null) {
+        if ($data['password'] != null) {
             $data['password'] = bcrypt($data['password']);
         } else {
             unset($data['password']);
@@ -104,6 +83,6 @@ class UserController extends Controller
     {
         $user->delete();
 
-       return redirect()->route('users.index');
+        return redirect()->route('users.index');
     }
 }

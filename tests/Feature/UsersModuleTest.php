@@ -85,14 +85,23 @@ class UsersModuleTest extends TestCase
         $this->post('/usuarios/', [
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
-            'password' => '1234567'
+            'password' => '1234567',
+            'bio' => 'Programador de Laravel y Vue.js',
+            'twitter' => 'https://twitter.com/el_charley'
         ])->assertRedirect(route('users.index'));
 
         $this->assertCredentials([
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
-            'password' => '1234567'
+            'password' => '1234567',
         ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'bio' => 'Programador de Laravel y Vue.js',
+            'twitter' => 'https://twitter.com/el_charley',
+            'user_id' => User::findByEmail('adri@gmail.com')->id // o User::first()->id
+        ]);
+
     }
 
     /** @test */
@@ -209,6 +218,76 @@ class UsersModuleTest extends TestCase
             ->assertSessionHasErrors(['password' => 'La contraseña debe tener mas de seis caracteres']);
 
         $this->assertEquals(0, User::count());
+    }
+
+    /** @test */
+    function the_bio_is_required()
+    {
+        // $this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', [
+            'name' => 'Adrian Marín',
+            'email' => 'adrian@gmail.com',
+            'password' => '1234567',
+            'bio' => '',
+            'twitter' => 'https://twitter.com/el_charley',
+        ])
+            ->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors(['bio' => 'La biografia es obligatoria']);
+
+        $this->assertEquals(0, User::count());
+    }
+
+    /** @test */
+    function the_twitter_must_be_an_url()
+    {
+        // $this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', [
+            'name' => 'Adrian Marín',
+            'email' => 'adrian@gmail.com',
+            'password' => '1234567',
+            'bio' => 'Programador back-end',
+            'twitter' => 'no-soy-una-url',
+        ])
+            ->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors(['twitter' => 'El twitter debe ser una url']);
+
+        $this->assertEquals(0, User::count());
+    }
+
+    /** @test */
+    function the_twitter_is_not_required()
+    {
+        // $this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', [
+            'name' => 'Adrian Marín',
+            'email' => 'adrian@gmail.com',
+            'password' => '1234567',
+            'bio' => 'Programador back-end',
+            'twitter' => '',
+        ])
+            ->assertRedirect(route('users.index'));
+
+        $this->assertCredentials([
+            'name' => 'Adrian Marín',
+            'email' => 'adrian@gmail.com',
+            'password' => '1234567',
+        ]);
+
+        $this->assertDatabaseHas('user_profiles',[
+                'user_id' => User::findByEmail('adrian@gmail.com')->id,
+                'bio' => 'Programador back-end',
+                'twitter' => null,
+        ]);
+
     }
 
     /** @test */

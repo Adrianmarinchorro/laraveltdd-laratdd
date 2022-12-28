@@ -43,6 +43,16 @@
 
                 </div>
 
+                <div class="form-group">
+                    <label for="bio">Bio:</label>
+                    <textarea class="form-control" name="bio" id="bio">{{ old('bio') }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="twitter">Twitter:</label>
+                    <input type="text" class="form-control" name="twitter" id="twitter" placeholder="Url de tu usuario de twitter" value="{{ old('twitter') }}">
+                </div>
+
                 <button class="btn btn-primary" type="submit">Crear usuario</button>
                 <a class="btn btn-link" href="{{ route('users.index') }}">Regresar al listado de usuarios</a>
             </form>

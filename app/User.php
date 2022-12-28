@@ -2,8 +2,10 @@
 
 namespace App;
 
+use App\UserProfile;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -36,12 +38,17 @@ class User extends Authenticatable
     public static function findByEmail($email)
     {
                 // static es equivalente a User ya que estamos en la clase user
-        return static::where(compact('email'))->first();
+        return static::whereEmail($email)->first();
     }
 
     public function profession()
     {
         return $this->belongsTo(Profession::class);
+    }
+
+    public function profile()
+    {
+        return $this->hasOne(UserProfile::class);
     }
 
     public function isAdmin()
