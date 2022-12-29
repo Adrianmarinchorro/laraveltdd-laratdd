@@ -56,14 +56,14 @@ class CreateUserRequest extends FormRequest
             $data = $this->validated();
 
             $user = User::create([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => bcrypt($this->password),
             ]);
 
             $user->profile()->create([
-                'bio' => $data['bio'],
-                'twitter' => $data['twitter'],
+                'bio' => $this->bio,
+                'twitter' => $this->twitter,
             ]);
 
         });
