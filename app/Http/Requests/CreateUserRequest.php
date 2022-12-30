@@ -31,8 +31,17 @@ class CreateUserRequest extends FormRequest
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:7',
             'bio' => 'required',
-            'twitter' => ['nullable', 'url'],
-            'profession_id' => [Rule::exists('professions', 'id')->where('selectable', true), Rule::exists('professions', 'id')->whereNull('deleted_at')]
+            'twitter' => [
+                'nullable',
+                //'present', mirar luego con present la prueba no va, por eso esta null abajo
+                'url'
+            ],
+            'profession_id' => [
+                'nullable',
+                //'present',
+                Rule::exists('professions', 'id')->where('selectable', true),
+                Rule::exists('professions', 'id')->whereNull('deleted_at')
+            ]
 
         ];
     }
@@ -49,6 +58,7 @@ class CreateUserRequest extends FormRequest
             'bio.required' => 'La biografia es obligatoria',
             'twitter.url' => 'El twitter debe ser una url',
             'profession_id.exists' => 'La profesión debe ser válida',
+
         ];
     }
 
@@ -62,12 +72,12 @@ class CreateUserRequest extends FormRequest
                 'name' => $data['name'],
                 'email' => $data['email'],
                 'password' => bcrypt($data['password']),
-                'profession_id' => $data['profession_id'] ?? null,
             ]);
 
             $user->profile()->create([
                 'bio' => $data['bio'],
-                'twitter' => $data['twitter'] ?? null,
+                'profession_id' => $data['profession_id'] ?? null,
+                'twitter' => $data['twitter'] ?? null, // $data['twitter'] ?? null = ya no es necesario por la regla present
             ]);
         });
     }

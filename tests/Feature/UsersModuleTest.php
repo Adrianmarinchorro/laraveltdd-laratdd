@@ -64,9 +64,14 @@ class UsersModuleTest extends TestCase
     /** @test */
     function it_loads_the_new_users_page()
     {
+        $profession = factory(Profession::class)->create();
+
         $this->get('usuarios/nuevo')
             ->assertStatus(200)
-            ->assertSee('Crear usuario');
+            ->assertSee('Crear usuario')
+            ->assertViewHas('professions', function ($professions) use ($profession) {
+                return $professions->contains($profession);
+            });
 
     }
 
@@ -91,13 +96,13 @@ class UsersModuleTest extends TestCase
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
-            'profession_id' => $this->profession->id,
         ]);
 
         $this->assertDatabaseHas('user_profiles', [
             'bio' => 'Programador de Laravel y Vue.js',
             'twitter' => 'https://twitter.com/el_charley',
-            'user_id' => User::findByEmail('adri@gmail.com')->id // o User::first()->id
+            'profession_id' => $this->profession->id,
+            'user_id' => User::findByEmail('adri@gmail.com')->id, // o User::first()->id
         ]);
 
     }
@@ -184,6 +189,33 @@ class UsersModuleTest extends TestCase
             ->assertSessionHasErrors(['password' => 'La contraseña es obligatoria']);
 
         $this->assertDatabaseEmpty('users');
+    }
+
+    /** @test */
+    function the_profession_is_optional()
+    {
+        //$this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'profession_id' => '',
+        ]))
+            ->assertRedirect(route('users.index'));
+
+        $this->assertCredentials([
+            'name' => 'Adrián Marín',
+            'email' => 'adri@gmail.com',
+            'password' => '1234567',
+        ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'user_id' => User::findByEmail('adri@gmail.com')->id,
+            'bio' => 'Programador de Laravel y Vue.js',
+            'twitter' => 'https://twitter.com/el_charley',
+            'profession_id' => null,
+        ]);
+
     }
 
     /** @test */
@@ -328,33 +360,6 @@ class UsersModuleTest extends TestCase
             'user_id' => User::findByEmail('adri@gmail.com')->id,
             'bio' => 'Programador de Laravel y Vue.js',
             'twitter' => null,
-        ]);
-
-    }
-
-    /** @test */
-    function the_profession_is_optional()
-    {
-        $this->withoutExceptionHandling();
-
-        $this->from(route('users.create'));
-
-        $this->post('/usuarios/', $this->getValidData([
-            'profession_id' => null,
-        ]))
-            ->assertRedirect(route('users.index'));
-
-        $this->assertCredentials([
-            'name' => 'Adrián Marín',
-            'email' => 'adri@gmail.com',
-            'password' => '1234567',
-            'profession_id' => null,
-        ]);
-
-        $this->assertDatabaseHas('user_profiles', [
-            'user_id' => User::findByEmail('adri@gmail.com')->id,
-            'bio' => 'Programador de Laravel y Vue.js',
-            'twitter' => 'https://twitter.com/el_charley',
         ]);
 
     }

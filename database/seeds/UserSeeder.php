@@ -14,32 +14,25 @@ class UserSeeder extends Seeder
      */
     public function run()
     {
-        //$professions = DB::select('SELECT id FROM professions WHERE title = ? LIMIT 0,1', ['Desarrollador back-end']);
-
-//        $profession = DB::table('professions')
-//            ->select('id')
-//            ->where('title', '=', 'Desarrollador back-end')
-//            ->first()
-//            // ->take(1)->get()
-//        ;
-
-
-        // el metodo where no esta incluido
         $professionId = Profession::where('title', 'Desarrollador back-end')->value('id');
 
-        factory(User::class)->create([
+        $user = factory(User::class)->create([
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => bcrypt('123'),
-            'profession_id' => $professionId, // $profession->id
             'is_admin' => true,
         ]);
 
-        factory(User::class)->create([
-           'profession_id' => $professionId,
+        $user->profile()->create([
+            'bio' => 'Programador',
+            'profession_id' =>  $professionId,
         ]);
 
-        factory(User::class, 48)->create();
+        factory(User::class, 29)->create()->each(function ($user){
+            $user->profile()->create(
+                factory(\App\UserProfile::class)->raw()
+            );
+        });
 
     }
 }
