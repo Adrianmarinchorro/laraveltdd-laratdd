@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Profession;
 use App\User;
 use Illuminate\Support\Facades\DB;
 use Tests\TestCase;
@@ -12,6 +13,8 @@ class UsersModuleTest extends TestCase
 {
 
     use RefreshDatabase;
+
+    protected $profession;
 
     /** @test */
     function it_loads_the_users_list_page()
@@ -88,6 +91,7 @@ class UsersModuleTest extends TestCase
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
+            'profession_id' => $this->profession->id,
         ]);
 
         $this->assertDatabaseHas('user_profiles', [
@@ -183,6 +187,68 @@ class UsersModuleTest extends TestCase
     }
 
     /** @test */
+    function the_profession_must_be_valid()
+    {
+        // $this->witExceptionHandling();
+        // ó
+        // $this->handleValidationExceptions();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'profession_id' => '999',
+        ]))
+            ->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors(['profession_id' => 'La profesión debe ser válida']);
+
+
+        $this->assertDatabaseEmpty('users');
+
+    }
+
+    /** @test */
+    function only_selectable_professions_are_valid()
+    {
+
+        $invalidProfession = factory(Profession::class)->create([
+            'selectable' => false
+        ]);
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'profession_id' => $invalidProfession->id,
+        ]))
+            ->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors(['profession_id' => 'La profesión debe ser válida']);
+
+
+        $this->assertDatabaseEmpty('users');
+
+    }
+
+    /** @test */
+    function only_not_deleted_professions_are_valid()
+    {
+
+        $deletedProfession = factory(Profession::class)->create([
+            'deleted_at' => now()->format('Y-m-d'),
+        ]);
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'profession_id' => $deletedProfession->id,
+        ]))
+            ->assertRedirect(route('users.create'))
+            ->assertSessionHasErrors(['profession_id' => 'La profesión debe ser válida']);
+
+
+        $this->assertDatabaseEmpty('users');
+
+    }
+
+    /** @test */
     function the_password_must_be_more_than_six_characters()
     {
         //$this->withoutExceptionHandling();
@@ -243,7 +309,7 @@ class UsersModuleTest extends TestCase
     /** @test */
     function the_twitter_is_optional()
     {
-         $this->withoutExceptionHandling();
+        $this->withoutExceptionHandling();
 
         $this->from(route('users.create'));
 
@@ -258,10 +324,37 @@ class UsersModuleTest extends TestCase
             'password' => '1234567',
         ]);
 
-        $this->assertDatabaseHas('user_profiles',[
-                'user_id' => User::findByEmail('adri@gmail.com')->id,
-                'bio' => 'Programador de Laravel y Vue.js',
-                'twitter' => null,
+        $this->assertDatabaseHas('user_profiles', [
+            'user_id' => User::findByEmail('adri@gmail.com')->id,
+            'bio' => 'Programador de Laravel y Vue.js',
+            'twitter' => null,
+        ]);
+
+    }
+
+    /** @test */
+    function the_profession_is_optional()
+    {
+        $this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'profession_id' => null,
+        ]))
+            ->assertRedirect(route('users.index'));
+
+        $this->assertCredentials([
+            'name' => 'Adrián Marín',
+            'email' => 'adri@gmail.com',
+            'password' => '1234567',
+            'profession_id' => null,
+        ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'user_id' => User::findByEmail('adri@gmail.com')->id,
+            'bio' => 'Programador de Laravel y Vue.js',
+            'twitter' => 'https://twitter.com/el_charley',
         ]);
 
     }
@@ -388,7 +481,7 @@ class UsersModuleTest extends TestCase
             'password' => '1234567'
         ])
             ->assertRedirect(route('users.update', ['user' => $user]))
-            ->assertSessionHasErrors(['email' ]);
+            ->assertSessionHasErrors(['email']);
 
 
     }
@@ -429,10 +522,10 @@ class UsersModuleTest extends TestCase
 
         $this->from(route('users.edit', ['user' => $user]))
             ->put("/usuarios/{$user->id}", [
-            'name' => 'Adrian Marín',
-            'email' => 'adri@gmail.com',
-            'password' => ''
-        ])
+                'name' => 'Adrian Marín',
+                'email' => 'adri@gmail.com',
+                'password' => ''
+            ])
             ->assertRedirect(route('users.show', ['user' => $user]));
 
         $this->assertCredentials([
@@ -462,11 +555,15 @@ class UsersModuleTest extends TestCase
      */
     public function getValidData(array $custom = []): array
     {
+
+        $this->profession = factory(Profession::class)->create();
+
         // combina ambos array priorizando el array con atributos personalizados
         return array_filter(array_merge([
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
+            'profession_id' => $this->profession->id,
             'bio' => 'Programador de Laravel y Vue.js',
             'twitter' => 'https://twitter.com/el_charley'
         ], $custom));

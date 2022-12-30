@@ -5,6 +5,7 @@ namespace App\Http\Requests;
 use App\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Validation\Rule;
 
 class CreateUserRequest extends FormRequest
 {
@@ -27,10 +28,11 @@ class CreateUserRequest extends FormRequest
     {
         return [
             'name' => 'required',
-            'email' => 'required|email|unique:users,email', // si no se añade regla ya si es capaz de capturar el valor
+            'email' => 'required|email|unique:users,email',
             'password' => 'required|min:7',
             'bio' => 'required',
             'twitter' => ['nullable', 'url'],
+            'profession_id' => [Rule::exists('professions', 'id')->where('selectable', true), Rule::exists('professions', 'id')->whereNull('deleted_at')]
 
         ];
     }
@@ -46,6 +48,7 @@ class CreateUserRequest extends FormRequest
             'password.min' => 'La contraseña debe tener mas de seis caracteres',
             'bio.required' => 'La biografia es obligatoria',
             'twitter.url' => 'El twitter debe ser una url',
+            'profession_id.exists' => 'La profesión debe ser válida',
         ];
     }
 
@@ -56,17 +59,16 @@ class CreateUserRequest extends FormRequest
             $data = $this->validated();
 
             $user = User::create([
-                'name' => $this->name,
-                'email' => $this->email,
-                'password' => bcrypt($this->password),
+                'name' => $data['name'],
+                'email' => $data['email'],
+                'password' => bcrypt($data['password']),
+                'profession_id' => $data['profession_id'] ?? null,
             ]);
 
             $user->profile()->create([
-                'bio' => $this->bio,
-                'twitter' => $this->twitter,
+                'bio' => $data['bio'],
+                'twitter' => $data['twitter'] ?? null,
             ]);
-
         });
-
     }
 }
