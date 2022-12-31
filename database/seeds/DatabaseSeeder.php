@@ -15,11 +15,20 @@ class DatabaseSeeder extends Seeder
         $this->truncateTables([
             'professions',
             'users',
+            'skills'
         ]);
 
         // $this->call(UsersTableSeeder::class);
-        $this->call(ProfessionSeeder::class);
-        $this->call(UserSeeder::class);
+//        $this->call(ProfessionSeeder::class);
+//        $this->call(UserSeeder::class);
+//        $this->call(SkillSeeder::class);
+
+        $this->call([
+            ProfessionSeeder::class,
+            SkillSeeder::class,
+            UserSeeder::class,
+        ]);
+
     }
 
     public function truncateTables(array $tables): void
