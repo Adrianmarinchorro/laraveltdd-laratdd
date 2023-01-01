@@ -51,6 +51,11 @@ class User extends Authenticatable
         return $this->hasOne(UserProfile::class);
     }
 
+    public function skills()
+    {
+        return $this->belongsToMany(Skill::class, 'user_skill');
+    }
+
     public function isAdmin()
     {
         return $this->is_admin;
