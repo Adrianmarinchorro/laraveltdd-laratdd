@@ -30,7 +30,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-    'is_admin' => 'boolean',
+    //
     ];
 
     protected $guarded = ['is_admin'];
@@ -58,6 +58,6 @@ class User extends Authenticatable
 
     public function isAdmin()
     {
-        return $this->is_admin;
+        return $this->role === 'admin';
     }
 }

@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Profession;
+use App\Role;
 use App\Skill;
 use App\User;
 use Illuminate\Support\Facades\DB;
@@ -112,6 +113,7 @@ class UsersModuleTest extends TestCase
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
+            'role' => 'user',
         ]);
 
         $user = User::findByEmail('adri@gmail.com');
@@ -222,6 +224,42 @@ class UsersModuleTest extends TestCase
             ->assertSessionHasErrors(['password' => 'La contraseña es obligatoria']);
 
         $this->assertDatabaseEmpty('users');
+    }
+
+    /** @test */
+    function the_role_is_optional()
+    {
+        //$this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'role' => null,
+        ]))
+            ->assertRedirect(route('users.index'));
+
+        $this->assertDatabaseHas('users',[
+            'email' => 'adri@gmail.com',
+            'role' => 'user'
+        ]);
+
+    }
+
+    /** @test */
+    function the_role_must_be_valid()
+    {
+        //$this->withoutExceptionHandling();
+
+        $this->from(route('users.create'));
+
+        $this->post('/usuarios/', $this->getValidData([
+            'role' => 'invalid-role',
+        ]))
+            ->assertSessionHasErrors(['role'])
+            ->assertRedirect(route('users.create'));
+
+        $this->assertDatabaseEmpty('users');
+
     }
 
     /** @test */
@@ -638,7 +676,8 @@ class UsersModuleTest extends TestCase
             'password' => '1234567',
             'profession_id' => $this->profession->id,
             'bio' => 'Programador de Laravel y Vue.js',
-            'twitter' => 'https://twitter.com/el_charley'
+            'twitter' => 'https://twitter.com/el_charley',
+            'role' => 'user'
         ], $custom));
     }
 

@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             'name' => 'Adrián Marín',
             'email' => 'adri@gmail.com',
             'password' => bcrypt('123'),
-            'is_admin' => true,
+            'role' => 'admin',
         ]);
 
         $user->profile()->create([

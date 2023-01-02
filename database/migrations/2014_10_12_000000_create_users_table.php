@@ -18,7 +18,7 @@ class CreateUsersTable extends Migration
             $table->string('name'); // Varchar
             $table->string('email')->unique(); // Varchar y Unique
             $table->string('password'); // Varchar
-            $table->boolean('is_admin')->default(false);
+            $table->string('role');
             $table->rememberToken(); // metodo helper para columna comun en la app como ej almacenar token para recordar usuarios.
             $table->timestamps(); // helper que genera las columnas updated_at y created_at
         });
