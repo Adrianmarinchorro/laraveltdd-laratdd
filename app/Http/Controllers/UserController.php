@@ -16,11 +16,6 @@ class UserController extends Controller
 
         $title = 'Listado de usuarios';
 
-
-//        return view('users.index')
-//            ->with('users', User::all())
-//            ->with('title', 'Listado de usuarios');
-
         return view('users.index', compact(
                 'title',
                 'users'
