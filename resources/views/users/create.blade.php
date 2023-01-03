@@ -3,24 +3,23 @@
 @section('title', 'Crear usuario');
 
 @section('content')
-    <div class="card">
-        <div class="card-header h4">
-            Crear nuevo usuario
-        </div>
 
-        <div class="card-body">
-            @include('shared._errors')
+    @card
 
-            <form action="{{ route('users.store') }}" method="POST">
+        @slot('header', 'Crear nuevo usuario')
 
-                @include('users._fields')
+        @include('shared._errors')
 
-                <div class="form-group mt-4">
-                    <button class="btn btn-primary" type="submit">Crear usuario</button>
-                    <a class="btn btn-link" href="{{ route('users.index') }}">Regresar al listado de usuarios</a>
-                </div>
+        <form action="{{ route('users.store') }}" method="POST">
 
-            </form>
-        </div>
-    </div>
+            @include('users._fields')
+
+            <div class="form-group mt-4">
+                <button class="btn btn-primary" type="submit">Crear usuario</button>
+                <a class="btn btn-link" href="{{ route('users.index') }}">Regresar al listado de usuarios</a>
+            </div>
+
+        </form>
+
+    @endcard
 @endsection
