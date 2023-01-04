@@ -18,9 +18,6 @@ class AppServiceProvider extends ServiceProvider
     public function boot()
     {
         Blade::component('shared._card', 'card');
-
-        View::composer(['users.create', 'users.edit'], UserFieldsComposer::class);
-        //View::composer('users/_fields', UserFieldsComposer::class); // esto para pasarlo solo a los campos, pero daría error en los test
     }
 
     /**
