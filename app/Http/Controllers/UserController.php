@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Http\Requests\CreateUserRequest, Profession, Skill, User, UserProfile};
+use App\{Http\Requests\CreateUserRequest, Profession, Role, Skill, User, UserProfile};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\Rule;
@@ -32,17 +32,19 @@ class UserController extends Controller
         return view('users.show', compact('user'));
     }
 
+    protected function form($view, User $user)
+    {
+        return view($view, [
+            'user' => $user,
+            'professions' => Profession::orderBy('title', 'ASC')->get(),
+            'skills' => Skill::orderBy('name', 'ASC')->get(),
+            'roles' => trans('users.roles'),
+        ]);
+    }
+
     public function create()
     {
-        $professions = Profession::orderBy('title','ASC')->get();
-
-        $skills = Skill::orderBy('name', 'ASC')->get();
-
-        $roles = trans('users.roles');
-
-        $user = new User;
-
-        return view('users.create', compact('user','professions', 'skills', 'roles'));
+       return $this->form('users.create', new User);
     }
 
     public function store(CreateUserRequest $request)
@@ -54,13 +56,7 @@ class UserController extends Controller
 
     public function edit(User $user)
     {
-        $professions = Profession::orderBy('title','ASC')->get();
-
-        $skills = Skill::orderBy('name', 'ASC')->get();
-
-        $roles = trans('users.roles');
-
-        return view('users.edit', compact('user', 'professions', 'skills', 'roles'));
+        return $this->form('users.edit', $user);
     }
 
     public function update(User $user)
@@ -69,6 +65,11 @@ class UserController extends Controller
             'name' => 'required',
             'email' => ['required', 'email', Rule::unique('users')->ignore($user->id)],
             'password' => '',
+            'role' => '',
+            'bio' => '',
+            'twitter' => '',
+            'profession_id' => '',
+            'skills' => '',
         ], [
             'name.required' => 'El nombre es obligatorio',
             'email.required' => 'El correo electrónico es obligatorio',
@@ -83,7 +84,13 @@ class UserController extends Controller
         }
 
 
-        $user->update($data);
+        $user->fill($data);
+        $user->role = $data['role'];
+        $user->save();
+
+        $user->profile->update($data);
+
+        $user->skills()->sync($data['skills'] ?? []);
 
         return redirect()->route('users.show', ['user' => $user]);
     }
