@@ -245,4 +245,20 @@ class UpdateUsersTest extends TestCase
 
     }
 
+    /** @test */
+    function the_role_is_required()
+    {
+        $this->handleValidationExceptions();
+
+        $user = factory(User::class)->create();
+
+        $this->from("usuarios/{$user->id}/editar")
+            ->put("/usuarios/{$user->id}", $this->getValidData([
+                'role' => '',
+            ]))->assertRedirect(route('users.edit', ['user' => $user]))
+            ->assertSessionHasErrors(['role']);
+
+        $this->assertDatabaseMissing('users', ['email' => 'adri@gmail.com']);
+    }
+
 }
