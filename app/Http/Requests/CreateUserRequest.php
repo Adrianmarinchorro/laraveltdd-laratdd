@@ -73,25 +73,20 @@ class CreateUserRequest extends FormRequest
     {
         DB::transaction(function() {
 
-            $data = $this->validated();
-
-            $user = new User([
-                'name' => $data['name'],
-                'email' => $data['email'],
-                'password' => bcrypt($data['password']),
+            $user = User::create([
+                'name' => $this->name,
+                'email' => $this->email,
+                'password' => bcrypt($this->password),
+                'role' => $this->role ?? 'user',
             ]);
-
-            $user->role = $data['role'] ?? 'user';
-
-            $user->save();
 
             $user->profile()->create([
-                'bio' => $data['bio'],
-                'profession_id' => $data['profession_id'] ?? null,
-                'twitter' => $data['twitter'] ?? null, // $data['twitter'] ?? null = ya no es necesario por la regla present
+                'bio' => $this->bio,
+                'profession_id' => $this->profession_id,
+                'twitter' => $this->twitter, // $data['twitter'] ?? null = ya no es necesario por la regla present
             ]);
 
-            $user->skills()->attach($data['skills'] ?? []);
+            $user->skills()->attach($this->skills);
 
         });
     }

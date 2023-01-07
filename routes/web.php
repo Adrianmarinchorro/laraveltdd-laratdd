@@ -15,6 +15,10 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('/editar-perfil', 'ProfileController@edit')->name('profile.edit');
+
+Route::put('/editar-perfil', 'ProfileController@update')->name('profile.update');
+
 Route::get('/usuarios', 'UserController@index')->name('users.index');
 
 Route::get('/usuarios/{user}', 'UserController@show')->where('user', '[0-9]+')->name('users.show');
