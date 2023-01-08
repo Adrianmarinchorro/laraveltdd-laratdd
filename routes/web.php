@@ -15,10 +15,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/editar-perfil', 'ProfileController@edit')->name('profile.edit');
-
-Route::put('/editar-perfil', 'ProfileController@update')->name('profile.update');
-
 Route::get('/usuarios', 'UserController@index')->name('users.index');
 
 Route::get('/usuarios/{user}', 'UserController@show')->where('user', '[0-9]+')->name('users.show');
@@ -34,3 +30,15 @@ Route::get('/usuarios/{user}/editar', 'UserController@edit')->where('user','[0-9
 Route::post('/usuarios', 'UserController@store')->name('users.store');
 
 Route::get('/saludo/{name}/{nickname?}', 'WelcomeUserController')->name('greet');
+
+// Editar perfil propio
+Route::get('/editar-perfil', 'ProfileController@edit')->name('profile.edit');
+
+Route::put('/editar-perfil', 'ProfileController@update')->name('profile.update');
+
+// Profesiones
+Route::get('/profesiones', 'ProfessionController@index')->name('profession.index');
+Route::delete('/profesiones/{profession}', 'ProfessionController@destroy')->name('profession.destroy');
+
+// Habilidades
+Route::get('/habilidades', 'SkillController@index')->name('skill.index');
