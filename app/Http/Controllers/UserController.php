@@ -13,7 +13,7 @@ class UserController extends Controller
     {
         return view('users.index', [
             'title' => 'Listado de usuarios',
-            'users' => User::all(),
+            'users' => User::orderBy('created_at', 'DESC')->paginate(),
         ]);
     }
 
