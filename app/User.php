@@ -27,13 +27,6 @@ class User extends Authenticatable
     //
     ];
 
-    protected $perPage = 15;
-
-    public function getPerPage()
-    {
-       return parent::getPerPage() * 2; // 15 * 2
-    }
-
     public static function findByEmail($email)
     {
                 // static es equivalente a User ya que estamos en la clase user
