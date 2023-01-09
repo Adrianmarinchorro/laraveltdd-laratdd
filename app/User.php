@@ -33,11 +33,6 @@ class User extends Authenticatable
         return static::whereEmail($email)->first();
     }
 
-    public function profession()
-    {
-        return $this->belongsTo(Profession::class);
-    }
-
     public function profile()
     {
         return $this->hasOne(UserProfile::class)->withDefault([

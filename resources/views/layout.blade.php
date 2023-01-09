@@ -10,6 +10,9 @@
 
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sticky-footer-navbar/">
 
+    <!-- Custom styles for this template CSS -->
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha512-UyNhw5RNpQaCai2EdC+Js0QL4RlVmiq41DkmCJsRV3ZxipG2L0HhTqIf/H9Hp8ez2EnFlkBnjRGJU2stW3Lj+w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -53,12 +56,13 @@
 <main role="main" class="flex-shrink-0">
 
     <div class="row mt-5">
-        <div class="col-1 mt-5">
+        <div class="col-2 mt-5">
          <!-- Vacio para centrar el contenido-->
         </div>
         <div class="col-9 mt-5">
             @yield('content')
         </div>
+        <div class="col-1"></div>
 {{--        <div class="col-4 mt-5">--}}
 {{--            @section('sidebar')--}}
 {{--                <h2>Barra lateral</h2>--}}
@@ -70,7 +74,7 @@
 
 <footer class="footer mt-auto py-3">
     <div class="container">
-        <span class="text-muted">Place sticky footer content here.</span>
+        <span class="text-muted">Curso de Laravel desde 0 para 2DAW</span>
     </div>
 </footer>
 <script src="{{ asset('js/jquery-3.5.1.slim.min.js') }}" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>

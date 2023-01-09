@@ -24,7 +24,7 @@ class ListUsersTest extends TestCase
 
         $this->get('/usuarios')
             ->assertStatus(200)
-            ->assertSee('Listado de usuarios')
+            ->assertSee('Usuarios')
             ->assertSee('Joel')
             ->assertSee('Ellie');
     }
@@ -34,7 +34,7 @@ class ListUsersTest extends TestCase
     {
         $this->get('/usuarios')
             ->assertStatus(200)
-            ->assertSee('Listado de usuarios')
+            ->assertSee('Usuarios')
             ->assertSee('No hay usuarios registrados.');
     }
 
@@ -52,7 +52,7 @@ class ListUsersTest extends TestCase
 
         $this->get('/usuarios/papelera')
             ->assertStatus(200)
-            ->assertSee('Listado de usuarios en papelera')
+            ->assertSee('Usuarios en papelera')
             ->assertSee('Joel')
             ->assertDontSee('Ellie');
     }

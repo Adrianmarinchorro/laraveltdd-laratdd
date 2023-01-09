@@ -12,7 +12,7 @@ class UserController extends Controller
     public function index()
     {
         return view('users.index', [
-            'title' => 'Listado de usuarios',
+            'title' => 'Usuarios',
             'users' => User::orderBy('created_at', 'DESC')->paginate(),
         ]);
     }
@@ -20,8 +20,8 @@ class UserController extends Controller
     public function trashed()
     {
         return view('users.index', [
-            'title' => 'Listado de usuarios en papelera',
-            'users' => User::onlyTrashed()->get(),
+            'title' => 'Usuarios en papelera',
+            'users' => User::onlyTrashed()->paginate(),
         ]);
     }
 
