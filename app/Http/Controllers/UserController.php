@@ -11,24 +11,22 @@ class UserController extends Controller
 {
     public function index()
     {
+        return view('users.index', [
+            'title' => 'Listado de usuarios',
+            'users' => User::all(),
+        ]);
+    }
 
-        $users = User::all();
-
-        $title = 'Listado de usuarios';
-
-        return view('users.index', compact(
-                'title',
-                'users'
-            )
-        );
+    public function trashed()
+    {
+        return view('users.index', [
+            'title' => 'Listado de usuarios en papelera',
+            'users' => User::onlyTrashed()->get(),
+        ]);
     }
 
     public function show(User $user)
     {
-        // $user = User::findOrFail($id);
-
-        // dd($user); al enlazarse el modelo a la ruta (eloquent y laravel) nos trae el objeto mediante la llave primaria
-
         return view('users.show', compact('user'));
     }
 
@@ -66,10 +64,31 @@ class UserController extends Controller
         return redirect()->route('users.show', ['user' => $user]);
     }
 
-    public function destroy(User $user)
+    public function trash(User $user)
     {
         $user->delete();
+        $user->profile()->delete(); // elimina el perfil de forma logica.
 
         return redirect()->route('users.index');
     }
+
+    public function destroy(int $id)
+    {
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+
+        $user->forceDelete();
+
+        return redirect()->route('users.trashed');
+    }
+
+    public function restore(int $id)
+    {
+        $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
+
+        $user->restore();
+        $user->profile()->restore();
+
+        return redirect()->route('users.trashed');
+    }
+
 }

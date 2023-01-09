@@ -6,53 +6,15 @@ use App\Skill;
 use App\User;
 use App\UserProfile;
 use Tests\TestCase;
+use Illuminate\Foundation\Testing\WithFaker;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 
-class DeleteUsersTest extends TestCase
+class RestoreUsersTest extends TestCase
 {
-
     use RefreshDatabase;
 
     /** @test */
-    function it_send_a_user_to_the_trash()
-    {
-        $user = factory(User::class)->create();
-
-        $skillA = factory(Skill::class)->create();
-        $skillB = factory(Skill::class)->create();
-
-        $user->skills()->attach([$skillA->id, $skillB->id]);
-
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id
-        ]);
-
-        $this->patch("usuarios/{$user->id}/papelera")
-            ->assertRedirect(route('users.index'));
-
-
-        // opcion 1
-        $this->assertSoftDeleted('users', [
-            'id' => $user->id,
-        ]);
-
-        $this->assertSoftDeleted('user_profiles', [
-            'user_id' => $user->id,
-        ]);
-
-
-        // opcion 2
-
-        // refresca el usuario
-        $user->refresh();
-
-        // para saber si el usuario fuen enviado a la papelera
-        $this->assertTrue($user->trashed());
-
-    }
-
-    /** @test */
-    function it_completely_deletes_a_user()
+    function can_restore_a_trashed_user()
     {
         $user = factory(User::class)->create([
             'deleted_at' => now()
@@ -68,14 +30,23 @@ class DeleteUsersTest extends TestCase
             'user_id' => $user->id,
         ]);
 
-        $this->delete("usuarios/$user->id")
+        $this->patch("usuarios/$user->id/restaurar")
             ->assertRedirect(route('users.trashed'));
 
-        $this->assertDatabaseEmpty('users');
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+            'deleted_at' => null,
+        ]);
+
+        $this->assertDatabaseHas('user_profiles', [
+            'user_id' => $user->id,
+            'deleted_at' => null,
+        ]);
+
     }
 
     /** @test */
-    function it_cannot_delete_a_user_that_is_not_in_the_trash()
+    function Cannot_restore_a_not_trashed_user()
     {
         $this->withExceptionHandling();
 
@@ -94,7 +65,7 @@ class DeleteUsersTest extends TestCase
         ]);
 
 
-        $this->delete('usuarios/' . $user->id)
+        $this->patch('usuarios/' . $user->id . '/restaurar')
             ->assertStatus(404);
 
         $this->assertDatabaseHas('users', [
@@ -102,5 +73,7 @@ class DeleteUsersTest extends TestCase
             'deleted_at' => null
         ]);
     }
+
+
 
 }

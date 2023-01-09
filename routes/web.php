@@ -17,19 +17,23 @@ Route::get('/', function () {
 
 Route::get('/usuarios', 'UserController@index')->name('users.index');
 
+Route::get('/usuarios/nuevo', 'UserController@create')->name('users.create');
+
+Route::post('/usuarios', 'UserController@store')->name('users.store');
+
+Route::get('/usuarios/papelera', 'UserController@trashed')->name('users.trashed');
+
+Route::get('/usuarios/{user}/editar', 'UserController@edit')->where('user','[0-9]+')->name('users.edit');
+
+Route::patch('/usuarios/{user}/papelera', 'UserController@trash')->where('user', '[0-9]+')->name('users.trash');
+
+Route::patch('/usuarios/{id}/restaurar', 'UserController@restore')->where('id', '[0-9]+')->name('users.restore');
+
 Route::get('/usuarios/{user}', 'UserController@show')->where('user', '[0-9]+')->name('users.show');
 
 Route::put('/usuarios/{user}', 'UserController@update')->where('user', '[0-9]+')->name('users.update');
 
-Route::delete('/usuarios/{user}', 'UserController@destroy')->where('user', '[0-9]+')->name('users.destroy');
-
-Route::get('/usuarios/nuevo', 'UserController@create')->name('users.create');
-
-Route::get('/usuarios/{user}/editar', 'UserController@edit')->where('user','[0-9]+')->name('users.edit');
-
-Route::post('/usuarios', 'UserController@store')->name('users.store');
-
-Route::get('/saludo/{name}/{nickname?}', 'WelcomeUserController')->name('greet');
+Route::delete('/usuarios/{id}', 'UserController@destroy')->where('id', '[0-9]+')->name('users.destroy');
 
 // Editar perfil propio
 Route::get('/editar-perfil', 'ProfileController@edit')->name('profile.edit');

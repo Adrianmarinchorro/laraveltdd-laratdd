@@ -28,13 +28,27 @@
                     <td>{{ $user->name }}</td>
                     <td>{{ $user->email }}</td>
                     <td>
-                        <form action="{{ route('users.destroy', $user) }}" method="post">
-                            {{ csrf_field() }}
-                            {{ method_field('DELETE') }}
-                            <a class="btn btn-link" href="{{ route('users.show', $user) }}"><span class="oi oi-eye" /></a>
-                            <a class="btn btn-link" href="{{ route('users.edit', $user) }}"><span class="oi oi-pencil"/></a>
-                            <button class="btn btn-link" type="submit"><span class="oi oi-trash"></span></button>
-                        </form>
+                        @if($user->trashed())
+                            <form action="{{ route('users.restore', $user->id) }}" method="post">
+                                @csrf
+                                @method('PATCH')
+                                <button class="btn btn-link" type="submit"><span class="oi oi-pencil"></span></button>
+                            </form>
+
+                            <form action="{{ route('users.destroy', $user) }}" method="post">
+                                @csrf
+                                @method('DELETE')
+                                <button class="btn btn-link" type="submit"><span class="oi oi-circle-x"></span></button>
+                            </form>
+                        @else
+                            <form action="{{ route('users.trash', $user) }}" method="post">
+                                @csrf
+                                @method('PATCH')
+                                <a class="btn btn-link" href="{{ route('users.show', $user) }}"><span class="oi oi-eye" /></a>
+                                <a class="btn btn-link" href="{{ route('users.edit', $user) }}"><span class="oi oi-pencil"/></a>
+                                <button class="btn btn-link" type="submit"><span class="oi oi-trash"></span></button>
+                            </form>
+                        @endif
                     </td>
                 </tr>
             @endforeach

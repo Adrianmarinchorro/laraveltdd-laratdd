@@ -15,12 +15,17 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->increments('id'); // Integer Unsigned Autoincrement
+
+
             $table->string('name'); // Varchar
             $table->string('email')->unique(); // Varchar y Unique
             $table->string('password'); // Varchar
             $table->string('role');
+
+
             $table->rememberToken(); // metodo helper para columna comun en la app como ej almacenar token para recordar usuarios.
             $table->timestamps(); // helper que genera las columnas updated_at y created_at
+            $table->softDeletes();
         });
     }
 
