@@ -18,11 +18,13 @@ class DatabaseSeeder extends Seeder
             'skills',
             'user_profiles',
             'user_skill',
+            'teams',
         ]);
 
         $this->call([
             ProfessionSeeder::class,
             SkillSeeder::class,
+            TeamSeeder::class,
             UserSeeder::class,
         ]);
 
