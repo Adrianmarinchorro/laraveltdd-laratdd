@@ -10,6 +10,7 @@ class UserController extends Controller
     public function index()
     {
         $user = User::query()
+            ->with('team', 'skills', 'profile.profession')
             ->when(request('team'), function ($query, $team){
                 if($team === 'with_team'){
                     $query->has('team');
