@@ -15,7 +15,8 @@ class UpdateUsersTest extends TestCase
     use RefreshDatabase;
 
     protected $defaultData = [
-        'name' => 'Adrián Marín',
+        'first_name' => 'Adrián',
+        'last_name' => 'Marín',
         'email' => 'adri@gmail.com',
         'password' => '1234567',
         'profession_id' => '',
@@ -58,19 +59,16 @@ class UpdateUsersTest extends TestCase
         $newSkill1 = factory(Skill::class)->create();
         $newSkill2 = factory(Skill::class)->create();
 
-        $this->put("/usuarios/{$user->id}", [
-            'name' => 'Adrián Marín',
-            'email' => 'adri@gmail.com',
-            'password' => '1234567',
-            'bio' => 'Programador de Laravel y Vue.js',
-            'twitter' => 'https://twitter.com/el_charley',
+        // cambiamos solo las que son diferentes de las por defecto
+        $this->put("/usuarios/{$user->id}", $this->getValidData([
             'role' => 'admin',
             'profession_id' => $newProfession->id,
             'skills' => [$newSkill1->id, $newSkill2->id],
-        ])->assertRedirect(route('users.show', ['user' => $user]));
+        ]))->assertRedirect(route('users.show', ['user' => $user]));
 
         $this->assertCredentials([
-            'name' => 'Adrián Marín',
+            'first_name' => 'Adrián',
+            'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
             'role' => 'admin',
@@ -98,7 +96,7 @@ class UpdateUsersTest extends TestCase
     }
 
     /** @test */
-    function the_name_is_required()
+    function the_first_name_is_required()
     {
         $this->handleValidationExceptions();
 
@@ -107,9 +105,26 @@ class UpdateUsersTest extends TestCase
 
         $this->from("usuarios/{$user->id}/editar")
             ->put("/usuarios/{$user->id}", $this->getValidData([
-                'name' => '',
+                'first_name' => '',
             ]))->assertRedirect(route('users.edit', ['user' => $user]))
-            ->assertSessionHasErrors(['name' => 'El nombre es obligatorio']);
+            ->assertSessionHasErrors(['first_name' => 'El nombre es obligatorio']);
+
+        $this->assertDatabaseMissing('users', ['email' => 'adri@gmail.com']);
+    }
+
+    /** @test */
+    function the_last_name_is_required()
+    {
+        $this->handleValidationExceptions();
+
+        $user = factory(User::class)->create();
+
+
+        $this->from("usuarios/{$user->id}/editar")
+            ->put("/usuarios/{$user->id}", $this->getValidData([
+                'last_name' => '',
+            ]))->assertRedirect(route('users.edit', ['user' => $user]))
+            ->assertSessionHasErrors(['last_name' => 'Los apellidos son obligatorios']);
 
         $this->assertDatabaseMissing('users', ['email' => 'adri@gmail.com']);
     }
@@ -129,7 +144,7 @@ class UpdateUsersTest extends TestCase
             ->assertRedirect(route('users.edit', ['user' => $user]))
             ->assertSessionHasErrors(['email' => 'El correo electrónico es obligatorio']);
 
-        $this->assertDatabaseMissing('users', ['name' => 'Adrian Marín']);
+        $this->assertDatabaseMissing('users', ['first_name' => 'Adrian', 'last_name' => 'Marín']);
     }
 
 
@@ -149,7 +164,7 @@ class UpdateUsersTest extends TestCase
             ->assertSessionHasErrors(['email' => 'El correo electrónico debe ser valido']);
 
 
-        $this->assertDatabaseMissing('users', ['name' => 'Adrian Marín']);
+        $this->assertDatabaseMissing('users', ['first_name' => 'Adrian', 'last_name' => 'Marín']);
     }
 
     /** @test */
@@ -191,7 +206,8 @@ class UpdateUsersTest extends TestCase
             ->assertRedirect(route('users.show', ['user' => $user]));
 
         $this->assertDatabaseHas('users', [
-            'name' => 'Adrian Marín',
+            'first_name' => 'Adrian',
+            'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
         ]);
     }
@@ -215,7 +231,8 @@ class UpdateUsersTest extends TestCase
             ->assertRedirect(route('users.show', ['user' => $user]));
 
         $this->assertCredentials([
-            'name' => 'Adrian Marín',
+            'first_name' => 'Adrian',
+            'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
             'password' => $old_password,
         ]);

@@ -28,19 +28,18 @@ class CreateUserRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:7',
             'role' => ['nullable', Rule::in(Role::getList())],
             'bio' => 'required',
             'twitter' => [
                 'nullable',
-                //'present', mirar luego con present la prueba no va, por eso esta null abajo
                 'url'
             ],
             'profession_id' => [
                 'nullable',
-                //'present',
                 Rule::exists('professions', 'id')->where('selectable', true),
                 Rule::exists('professions', 'id')->whereNull('deleted_at')
             ],
@@ -56,7 +55,8 @@ class CreateUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'El nombre es obligatorio',
+            'first_name.required' => 'El nombre es obligatorio',
+            'last_name.required' => 'Los apellidos son obligatorios',
             'email.required' => 'El correo electrónico es obligatorio',
             'email.unique' => 'El correo electrónico debe ser único',
             'email.email' => 'El correo electrónico debe ser válido',
@@ -74,7 +74,8 @@ class CreateUserRequest extends FormRequest
         DB::transaction(function() {
 
             $user = User::create([
-                'name' => $this->name,
+                'first_name' => $this->first_name,
+                'last_name' => $this->last_name,
                 'email' => $this->email,
                 'password' => bcrypt($this->password),
                 'role' => $this->role ?? 'user',

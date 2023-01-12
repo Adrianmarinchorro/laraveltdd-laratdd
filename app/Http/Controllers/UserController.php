@@ -9,7 +9,7 @@ class UserController extends Controller
 {
     public function index()
     {
-        $user = User::query()
+        $users = User::query()
             ->with('team', 'skills', 'profile.profession')
             ->when(request('team'), function ($query, $team){
                 if($team === 'with_team'){
@@ -23,11 +23,12 @@ class UserController extends Controller
             ->orderBy('created_at', 'DESC')
             ->paginate();
 
-        $user->appends(request(['search', 'team']));
+        $users->appends(request(['search', 'team']));
+
 
         return view('users.index', [
             'title' => 'Usuarios',
-            'users' => $user,
+            'users' => $users,
         ]);
     }
 

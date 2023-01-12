@@ -55,21 +55,22 @@ class User extends Authenticatable
         return $this->role === 'admin';
     }
 
+    public function getNameAttribute()
+    {
+        return "{$this->first_name} {$this->last_name}";
+    }
+
     public function scopeSearch($query, $search)
     {
-        if(empty($search)) {
+        if (empty($search)) {
             return;
         }
 
-        $query->where(function ($query) use ($search) {
-            $query->where('name', 'like', "%{$search}%") // $search = request('search')
+        $query->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%")
             ->orWhere('email', 'like', "%{$search}%")
-                // modificar la consulta para añadirle la condicion sobre el campo
-                // nombre, la columna name la buscara usando la relación y no en el modelo user
-                ->orWhereHas('team', function ($query) use ($search) {
-                    $query->where('name', 'like', "%{$search}%");
-                });
-        });
+            ->orWhereHas('team', function ($query) use ($search) {
+                $query->where('name', 'like', "%{$search}%");
+            });
     }
 
 }

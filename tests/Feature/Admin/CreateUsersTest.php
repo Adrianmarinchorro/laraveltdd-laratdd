@@ -13,7 +13,8 @@ class CreateUsersTest extends TestCase
     use RefreshDatabase;
 
     protected $defaultData = [
-        'name' => 'Adrián Marín',
+        'first_name' => 'Adrián',
+        'last_name' => 'Marín',
         'email' => 'adri@gmail.com',
         'password' => '1234567',
         'profession_id' => '',
@@ -61,7 +62,8 @@ class CreateUsersTest extends TestCase
         ]))->assertRedirect(route('users.index'));
 
         $this->assertCredentials([
-            'name' => 'Adrián Marín',
+            'first_name' => 'Adrián',
+            'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
             'role' => 'user',
@@ -107,15 +109,30 @@ class CreateUsersTest extends TestCase
     }
 
     /** @test */
-    function the_name_is_required()
+    function the_first_name_is_required()
     {
         $this->handleValidationExceptions();
 
 
         $this->post('/usuarios/', $this->getValidData([
-            'name' => '',
+            'first_name' => '',
         ]))
-            ->assertSessionHasErrors(['name' => 'El nombre es obligatorio']);
+            ->assertSessionHasErrors(['first_name' => 'El nombre es obligatorio']);
+
+        $this->assertDatabaseEmpty('users');
+
+    }
+
+    /** @test */
+    function the_last_name_is_required()
+    {
+        $this->handleValidationExceptions();
+
+
+        $this->post('/usuarios/', $this->getValidData([
+            'last_name' => '',
+        ]))
+            ->assertSessionHasErrors(['last_name' => 'Los apellidos son obligatorios']);
 
         $this->assertDatabaseEmpty('users');
 
@@ -218,7 +235,8 @@ class CreateUsersTest extends TestCase
         ]));
 
         $this->assertCredentials([
-            'name' => 'Adrián Marín',
+            'first_name' => 'Adrián',
+            'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
         ]);
@@ -342,7 +360,8 @@ class CreateUsersTest extends TestCase
         ]));
 
         $this->assertCredentials([
-            'name' => 'Adrián Marín',
+            'first_name' => 'Adrián',
+            'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
             'password' => '1234567',
         ]);

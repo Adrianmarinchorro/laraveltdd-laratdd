@@ -17,7 +17,8 @@ class CreateUsersTable extends Migration
             $table->increments('id'); // Integer Unsigned Autoincrement
 
 
-            $table->string('name'); // Varchar
+            $table->string('first_name');
+            $table->string('last_name');
             $table->string('email')->unique(); // Varchar y Unique
             $table->string('password'); // Varchar
             $table->string('role');

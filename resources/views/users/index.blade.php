@@ -14,8 +14,7 @@
 
     @if($users->isNotEmpty())
 
-
-        <div class="table-responsive-lg">
+        <div class="table-responsive-lg table-striped">
             <table class="table table-sm">
                 <thead class="thead-dark">
                 <tr>

@@ -24,7 +24,8 @@ class UpdateUserRequest extends FormRequest
     {
         //TODO: hacer las pruebas de estas reglas
         return [
-            'name' => 'required',
+            'first_name' => 'required',
+            'last_name' => 'required',
             'email' => [
                 'required',
                 'email',
@@ -52,7 +53,8 @@ class UpdateUserRequest extends FormRequest
     public function messages()
     {
         return [
-            'name.required' => 'El nombre es obligatorio',
+            'first_name.required' => 'El nombre es obligatorio',
+            'last_name.required' => 'Los apellidos son obligatorios',
             'email.required' => 'El correo electrónico es obligatorio',
             'email.email' => 'El correo electrónico debe ser valido',
             'email.unique' => 'El correo electrónico debe ser único',
@@ -62,7 +64,8 @@ class UpdateUserRequest extends FormRequest
     public function updateUser(User $user)
     {
         $user->fill([
-            'name' => $this->name,
+            'first_name' => $this->first_name,
+            'last_name' => $this->last_name,
             'email' => $this->email,
         ]);
 

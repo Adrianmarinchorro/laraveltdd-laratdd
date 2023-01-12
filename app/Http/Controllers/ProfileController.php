@@ -30,7 +30,8 @@ class ProfileController extends Controller
 
         // con esto ya no tenemos que preocuparnos de errores ni trabajr con all()
         $user->update([
-            'name' => $request->name,
+            'first_name' => $request->first_name,
+            'last_name' => $request->last_name,
             'email' => $request->email,
         ]);
 
