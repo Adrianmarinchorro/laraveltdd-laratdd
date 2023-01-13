@@ -23,13 +23,8 @@ class DeleteUsersTest extends TestCase
 
         $user->skills()->attach([$skillA->id, $skillB->id]);
 
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id
-        ]);
-
         $this->patch("usuarios/{$user->id}/papelera")
             ->assertRedirect(route('users.index'));
-
 
         // opcion 1
         $this->assertSoftDeleted('users', [
@@ -63,11 +58,6 @@ class DeleteUsersTest extends TestCase
 
         $user->skills()->attach([$skillA->id, $skillB->id]);
 
-
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id,
-        ]);
-
         $this->delete("usuarios/$user->id")
             ->assertRedirect(route('users.trashed'));
 
@@ -87,12 +77,6 @@ class DeleteUsersTest extends TestCase
         $skillB = factory(Skill::class)->create();
 
         $user->skills()->attach([$skillA->id, $skillB->id]);
-
-
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id
-        ]);
-
 
         $this->delete('usuarios/' . $user->id)
             ->assertStatus(404);

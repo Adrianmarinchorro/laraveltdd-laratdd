@@ -10,7 +10,7 @@
         <p><a class="btn btn-primary" href="{{ route('users.create') }}">Nuevo usuario</a></p>
     </div>
 
-    @include('users._filters')
+    @includeWhen(isset($states), 'users._filters')
 
     @if($users->isNotEmpty())
 

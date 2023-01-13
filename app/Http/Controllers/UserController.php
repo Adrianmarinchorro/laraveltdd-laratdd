@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Profession, Skill, User};
+use App\{Profession, Role, Skill, User};
 use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
@@ -29,6 +29,10 @@ class UserController extends Controller
         return view('users.index', [
             'title' => 'Usuarios',
             'users' => $users,
+            'roles' => trans('users.filters.roles'),
+            'skills' => Skill::orderBy('name')->get(),
+            'states' => trans('users.filters.states'),
+            'checkedSkills' => collect(request('skills')),
         ]);
     }
 
