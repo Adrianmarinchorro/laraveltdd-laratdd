@@ -24,7 +24,7 @@ class User extends Authenticatable
     ];
 
     protected $casts = [
-        //
+        'active' => 'bool',
     ];
 
     public static function findByEmail($email)
@@ -71,6 +71,18 @@ class User extends Authenticatable
             ->orWhereHas('team', function ($query) use ($search) {
                 $query->where('name', 'like', "%{$search}%");
             });
+    }
+
+    public function scopeByState($query, $state)
+    {
+        if($state === 'active') {
+            return $query->where('active', true);
+        }
+
+        if($state === 'inactive') {
+            return $query->where('active', false);
+        }
+
     }
 
 }

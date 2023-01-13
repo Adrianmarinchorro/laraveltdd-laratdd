@@ -18,7 +18,7 @@ class UserController extends Controller
                     $query->doesntHave('team');
                 }
             })
-
+            ->byState(request('state'))
             ->search(request('search')) //llamamos al metodo sin la palabra scope
             ->orderBy('created_at', 'DESC')
             ->paginate();

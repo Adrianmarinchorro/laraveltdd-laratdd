@@ -47,6 +47,7 @@ class UserSeeder extends Seeder
             'password' => bcrypt('123'),
             'role' => 'admin',
             'created_at' => now()->addDay(), // creado en una fecha en el futuro para que salga el primero
+            'active' => true,
         ]);
 
         $admin->skills()->attach($this->skills);
@@ -61,6 +62,7 @@ class UserSeeder extends Seeder
     {
         $user = factory(User::class)->create([
             'team_id' => rand(0, 2) ? null : $this->teams->random()->id, // asignar cualquier equipo de manera aleatoria a este usuario
+            'active' => rand(0, 3) ? true : false,
         ]);
 
         $user->skills()->attach($this->skills->random(rand(0, 7)));
