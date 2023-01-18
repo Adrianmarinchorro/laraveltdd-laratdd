@@ -1,13 +1,14 @@
 <?php
 
 return [
+    'title' => ['index' => 'Usuarios', 'trash' => 'Usuarios en papelera',],
     'roles' => ['admin' => 'Admin', 'user' => 'Usuario'],
-    'filters' => [
-        'roles' => ['all' => 'Rol', 'admins' => 'Administradores', 'users' => 'Usuarios'],
-        'states' => ['all' => 'Todos', 'active' => 'Solo activos', 'inactive' => 'Solo inactivos'],
-    ],
     'state' => [
         'active' => 'Activo',
         'inactive' => 'Inactivo',
-    ]
+    ],
+    'filters' => [
+        'roles' => ['all' => 'Rol', 'admin' => 'Administradores', 'user' => 'Usuarios'],
+        'states' => ['all' => 'Todos', 'active' => 'Solo activos', 'inactive' => 'Solo inactivos'],
+    ],
 ];

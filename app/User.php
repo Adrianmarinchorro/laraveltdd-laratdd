@@ -57,11 +57,12 @@ class User extends Authenticatable
 
     public function setStateAttribute($value)
     {
-        $this->attributes['active'] = ($value == 'active');
+        $this->attributes['active'] = ($value == 'active') ;
     }
 
     public function getStateAttribute()
     {
+        // por esto ya no sale si esta inactivo, ya que el state se pone a null.
         if($this->active != null){
             return $this->active ? 'active' : 'inactive';
         }
@@ -95,6 +96,17 @@ class User extends Authenticatable
             return $query->where('active', false);
         }
 
+    }
+
+    public function scopeByRole($query, $role)
+    {
+        if(in_array($role, ['admin', 'user'])){
+            return $query->where('role', $role);
+        }
+
+//        if($role != null){
+//            return $query->where('role', $role);
+//        }
     }
 
 }

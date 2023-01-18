@@ -1,16 +1,22 @@
 @extends('layout')
 
-@section('title', $title)
+@section('title',  trans("users.title.{$view}"))
 
 @section('content')
 
     <div class="d-flex justify-content-between align-items-end mb-3">
-        <h1 class="pb-1">{{ $title }}</h1>
+        <h1 class="pb-1">{{ trans("users.title.{$view}") }}</h1>
 
-        <p><a class="btn btn-primary" href="{{ route('users.create') }}">Nuevo usuario</a></p>
+        @if($view == 'index')
+            <p><a class="btn btn-outline-dark" href="{{ route('users.trashed') }}">Ver papelera</a></p>
+            <p><a class="btn btn-primary" href="{{ route('users.create') }}">Nuevo usuario</a></p>
+        @else
+                <p><a class="btn btn-outline-dark" href="{{ route('users.index') }}">Regresar al listado de usuarios</a></p>
+        @endif
+
     </div>
 
-    @includeWhen(isset($states), 'users._filters')
+    @includeWhen($view === 'index', 'users._filters')
 
     @if($users->isNotEmpty())
 
