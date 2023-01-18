@@ -22,7 +22,8 @@ class UpdateUsersTest extends TestCase
         'profession_id' => '',
         'bio' => 'Programador de Laravel y Vue.js',
         'twitter' => 'https://twitter.com/el_charley',
-        'role' => 'user'
+        'role' => 'user',
+        'state' => 'inactive',
     ];
 
     /** @test */
@@ -64,6 +65,7 @@ class UpdateUsersTest extends TestCase
             'role' => 'admin',
             'profession_id' => $newProfession->id,
             'skills' => [$newSkill1->id, $newSkill2->id],
+            'state' => 'inactive' // inactive ya que al crearlo se hace activo y queremos verlo ahora inactive
         ]))->assertRedirect(route('users.show', ['user' => $user]));
 
         $this->assertCredentials([
@@ -72,6 +74,7 @@ class UpdateUsersTest extends TestCase
             'email' => 'adri@gmail.com',
             'password' => '1234567',
             'role' => 'admin',
+            'active' => false,
         ]);
 
         $this->assertDatabaseHas('user_profiles', [
@@ -276,6 +279,40 @@ class UpdateUsersTest extends TestCase
             ->assertSessionHasErrors(['role']);
 
         $this->assertDatabaseMissing('users', ['email' => 'adri@gmail.com']);
+    }
+
+    /** @test */
+    function the_state_is_required()
+    {
+        $this->withExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put("usuarios/{$user->id}", $this->getValidData([
+                'state' => '',
+            ]))
+            ->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors('state');
+
+        $this->assertDatabaseMissing('users', ['first_name' => 'Adrián']);
+    }
+
+    /** @test */
+    function the_state_must_be_valid()
+    {
+        $this->withExceptionHandling();
+
+        $user = factory(User::class)->create();
+
+        $this->from('usuarios/' . $user->id . '/editar')
+            ->put("usuarios/{$user->id}", $this->getValidData([
+                'state' => 'invalid-state',
+            ]))
+            ->assertRedirect('usuarios/' . $user->id . '/editar')
+            ->assertSessionHasErrors('state');
+
+        $this->assertDatabaseMissing('users', ['first_name' => 'Adrián']);
     }
 
 }
