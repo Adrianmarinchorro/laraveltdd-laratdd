@@ -6,19 +6,24 @@ use Illuminate\Database\Eloquent\Builder;
 
 class UserQuery extends Builder
 {
+    use FiltersQueries;
 
+    public function filterRules(): array
+    {
+        return $rules = [
+            'search' => 'filled',
+            'state' => 'in:active,inactive',
+            'role' => 'in:user,admin',
+        ];
+    }
 
     public function findByEmail($email)
     {
         return static::whereEmail($email)->first();
     }
 
-    public function search($search)
+    public function filterBysearch($search)
     {
-        if (empty($search)) {
-            return $this; // hay que devolver la propia consulta, el objeto es la propia consulta
-        }
-
         return $this->whereRaw('CONCAT(first_name, " ", last_name) like ?', "%{$search}%")
             ->orWhere('email', 'like', "%{$search}%")
             ->orWhereHas('team', function ($query) use ($search) {
@@ -26,26 +31,8 @@ class UserQuery extends Builder
             });
     }
 
-    public function byState($state)
+    public function filterByState($state)
     {
-        if($state === 'active') {
-            return $this->where('active', true);
-        }
-
-        if($state === 'inactive') {
-            return $this->where('active', false);
-        }
-
-        return $this; // si no entra debemos devolver la consulta
+        return $this->where('active', $state == 'active');
     }
-
-    public function byRole($role)
-    {
-        if(in_array($role, ['admin', 'user'])){
-            return $this->where('role', $role);
-        }
-
-        return $this;
-    }
-
 }
