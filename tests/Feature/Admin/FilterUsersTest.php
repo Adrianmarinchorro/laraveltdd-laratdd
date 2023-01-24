@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Skill;
 use App\User;
 use Tests\TestCase;
 use Illuminate\Foundation\Testing\RefreshDatabase;
@@ -77,6 +78,40 @@ class FilterUsersTest extends TestCase
         $response->assertViewCollection('users')
             ->contains($user)
             ->notContains($admin);
+
+    }
+
+    /** @test */
+    function filter_users_by_skills()
+    {
+        $php = factory(Skill::class)->create([
+            'name' => 'php'
+        ]);
+
+        $css = factory(Skill::class)->create([
+            'name' => 'css'
+        ]);
+
+        $backendDev = factory(User::class)->create();
+
+        $backendDev->skills()->attach($php);
+
+        $frontendDev = factory(User::class)->create();
+
+        $frontendDev->skills()->attach($css);
+
+        $fullstackDev = factory(User::class)->create();
+
+        $fullstackDev->skills()->attach([$php->id, $css->id]); // al incluirlas en array hay que hacer referencia al id si va solo el objeto no hace falta
+
+        $response = $this->get("usuarios?skills[0]={$php->id}&skills[1]={$css->id}");
+
+        $response->assertStatus(200);
+
+        $response->assertViewCollection('users')
+            ->contains($fullstackDev)
+            ->notContains($frontendDev)
+            ->notContains($backendDev);
 
     }
 
