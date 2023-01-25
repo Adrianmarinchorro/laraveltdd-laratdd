@@ -14,15 +14,15 @@ class CreateUserSkillTable extends Migration
     public function up()
     {
         Schema::create('user_skill', function (Blueprint $table) {
-            $table->increments('id');
+            $table->bigIncrements('id');
 
-            $table->unsignedInteger('user_id');
+            $table->unsignedBigInteger('user_id');
             $table->foreign('user_id')
                 ->references('id')
                 ->on('users')
                 ->onDelete('CASCADE');
 
-            $table->unsignedInteger('skill_id');
+            $table->unsignedBigInteger('skill_id');
             $table->foreign('skill_id')->references('id')->on('skills');
 
             $table->timestamps();
