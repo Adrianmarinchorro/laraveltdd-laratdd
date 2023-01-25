@@ -25,11 +25,6 @@ class RestoreUsersTest extends TestCase
 
         $user->skills()->attach([$skillA->id, $skillB->id]);
 
-
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id,
-        ]);
-
         $this->patch("usuarios/$user->id/restaurar")
             ->assertRedirect(route('users.trashed'));
 
@@ -58,12 +53,6 @@ class RestoreUsersTest extends TestCase
         $skillB = factory(Skill::class)->create();
 
         $user->skills()->attach([$skillA->id, $skillB->id]);
-
-
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id
-        ]);
-
 
         $this->patch('usuarios/' . $user->id . '/restaurar')
             ->assertStatus(404);

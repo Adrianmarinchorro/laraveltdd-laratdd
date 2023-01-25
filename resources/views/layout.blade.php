@@ -11,11 +11,13 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sticky-footer-navbar/">
 
     <!-- Custom styles for this template CSS -->
-    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
 
     <!-- Bootstrap core CSS -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/open-iconic/1.1.1/font/css/open-iconic-bootstrap.min.css" integrity="sha512-UyNhw5RNpQaCai2EdC+Js0QL4RlVmiq41DkmCJsRV3ZxipG2L0HhTqIf/H9Hp8ez2EnFlkBnjRGJU2stW3Lj+w==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link href="https://unpkg.com/gijgo@1.9.14/css/gijgo.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{{ asset('css/style.css') }}">
+
     <!-- Favicons -->
     <link rel="apple-touch-icon" href="/docs/4.5/assets/img/favicons/apple-touch-icon.png" sizes="180x180">
     <link rel="icon" href="/docs/4.5/assets/img/favicons/favicon-32x32.png" sizes="32x32" type="image/png">
@@ -78,5 +80,19 @@
     </div>
 </footer>
 <script src="{{ asset('js/jquery-3.5.1.slim.min.js') }}" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script>window.jQuery || document.write('<script src="{{ asset('js/jquery.slim.min.js') }}"><\/script>')</script><script src="{{ asset('js/bootstrap.bundle.min.js') }}" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script></body>
+<script>window.jQuery || document.write('<script src="{{ asset('js/jquery.slim.min.js') }}"><\/script>')</script><script src="{{ asset('js/bootstrap.bundle.min.js') }}" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/gijgo@1.9.14/js/gijgo.min.js" type="text/javascript"></script>
+<script>
+    $('#from').datepicker({
+        uiLibrary: 'bootstrap4',
+        format: 'dd/mm/yyyy',
+
+    });
+    $('#to').datepicker({
+        uiLibrary: 'bootstrap4',
+        format: 'dd/mm/yyyy',
+
+    });
+</script>
+</body>
 </html>

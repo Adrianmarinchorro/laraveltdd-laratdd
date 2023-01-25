@@ -29,7 +29,7 @@ abstract class QueryFilter
 
     public function applyFilters($query, $name, $value): void
     {
-        $method = 'filterBy' . Str::studly($name);
+        $method = Str::studly($name);
 
         if (method_exists($this, $method)) {
             $this->$method($query, $value); //llama al metodo de la clase

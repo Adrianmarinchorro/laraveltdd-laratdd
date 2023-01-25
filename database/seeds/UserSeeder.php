@@ -39,14 +39,15 @@ class UserSeeder extends Seeder
 
     public function createAdmin(): void
     {
-        $admin = factory(User::class)->create([
-            'team_id' => $this->teams->firstWhere('name', 'IES Ingeniero'),// para obtener 1 solo equipo con dicho nombre
+                    // factory(User::class)->create
+        $admin = User::create([
+            'team_id' => $this->teams->firstWhere('name', 'IES Ingeniero')->id,// para obtener 1 solo equipo con dicho nombre
             'first_name' => 'Adrián',
             'last_name' => 'Marín',
             'email' => 'adri@gmail.com',
             'password' => bcrypt('123'),
             'role' => 'admin',
-            'created_at' => now()->addDay(), // creado en una fecha en el futuro para que salga el primero
+            'created_at' => now(), // ya no hace falta ponerle un dia más ya que al resto le vamos a restar días y por tanto este sera el mas moderno.
             'active' => true,
         ]);
 
@@ -63,12 +64,17 @@ class UserSeeder extends Seeder
         $user = factory(User::class)->create([
             'team_id' => rand(0, 2) ? null : $this->teams->random()->id, // asignar cualquier equipo de manera aleatoria a este usuario
             'active' => rand(0, 3) ? true : false,
+            'created_at' => now()->subDays(rand(1, 90)), // le vamos a restar la fecha actual un numero random de dias entre 1 y 90
         ]);
 
         $user->skills()->attach($this->skills->random(rand(0, 7)));
 
-        factory(UserProfile::class)->create([
-            'user_id' => $user->id,
+//        factory(UserProfile::class)->create([
+//            'user_id' => $user->id,
+//            'profession_id' => rand(0, 2) ? $this->professions->random()->id : null,
+//        ]);
+
+        $user->profile()->update([
             'profession_id' => rand(0, 2) ? $this->professions->random()->id : null,
         ]);
     }

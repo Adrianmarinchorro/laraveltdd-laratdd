@@ -66,20 +66,12 @@
             <div class="form-inline form-dates">
                 <label for="date_start" class="form-label-sm">Fecha</label>
                 <div class="input-group">
-                    <input type="text" class="form-control form-control-sm" name="date_start" id="date_start"
-                           placeholder="Desde">
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-secondary btn-sm"><span class="oi oi-calendar"></span>
-                        </button>
-                    </div>
+                    <input type="text" class="form-control form-control-sm" name="from" id="from"
+                           placeholder="Desde" value="{{ request('from') }}">
                 </div>
                 <div class="input-group">
-                    <input type="text" class="form-control form-control-sm" name="date_start" id="date_start"
-                           placeholder="Hasta">
-                    <div class="input-group-append">
-                        <button type="button" class="btn btn-secondary btn-sm"><span class="oi oi-calendar"></span>
-                        </button>
-                    </div>
+                    <input type="text" class="form-control form-control-sm" name="to" id="to"
+                           placeholder="Hasta" value="{{ request('to') }}">
                 </div>
                 <button type="submit" class="btn btn-sm btn-primary">Filtrar</button>
             </div>
