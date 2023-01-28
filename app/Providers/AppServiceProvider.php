@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 
+use App\Sortable;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
@@ -27,6 +28,8 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        //
+        $this->app->bind(Sortable::class, function ($app) {
+           return new Sortable(request()->url()); // nos devuelve mediante el helper request la url de donde nos encontramos en este momento
+        });
     }
 }
