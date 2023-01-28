@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\{Profession, Role, Skill, User, UserFilter};
+use App\{Profession, Role, Skill, Sortable, User, UserFilter};
 use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
 {
-    public function index(UserFilter $userFilter)
+    public function index(UserFilter $userFilter, Sortable $sortable)
     {
         $users = User::query()
             ->with('team', 'skills', 'profile.profession')
@@ -24,12 +24,14 @@ class UserController extends Controller
 
         $users->appends($userFilter->valid());
 
+        $sortable->setCurrentOrder(request('order'), request('direction'));
 
         return view('users.index', [
             'users' => $users,
             'skills' => Skill::orderBy('name')->get(),
             'view' => 'index',
             'checkedSkills' => collect(request('skills')),
+            'sortable' => $sortable,
         ]);
     }
 
