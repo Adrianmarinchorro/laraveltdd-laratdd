@@ -21,7 +21,7 @@ Route::get('/usuarios/nuevo', 'UserController@create')->name('users.create');
 
 Route::post('/usuarios', 'UserController@store')->name('users.store');
 
-Route::get('/usuarios/papelera', 'UserController@trashed')->name('users.trashed');
+Route::get('/usuarios/papelera', 'UserController@index')->name('users.trashed');
 
 Route::get('/usuarios/{user}/editar', 'UserController@edit')->where('user','[0-9]+')->name('users.edit');
 
