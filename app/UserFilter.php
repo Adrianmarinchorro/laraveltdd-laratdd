@@ -10,14 +10,16 @@ class UserFilter extends QueryFilter
 
     public function rules(): array
     {
-       return [
-           'search' => 'filled',
-           'state' => 'in:active,inactive',
-           'role' => 'in:user,admin', // se aplica por defecto
-           'skills' => 'array|exists:skills,id',
-           'from' => 'date_format:d/m/Y',
-           'to' => 'date_format:d/m/Y',
-       ];
+        return [
+            'search' => 'filled',
+            'state' => 'in:active,inactive',
+            'role' => 'in:user,admin', // se aplica por defecto
+            'skills' => 'array|exists:skills,id',
+            'from' => 'date_format:d/m/Y',
+            'to' => 'date_format:d/m/Y',
+            'order' => 'in:first_name,email,created_at',
+            'direction' => 'in:asc,desc',
+        ];
     }
 
     public function search($query, $search)
@@ -61,4 +63,13 @@ class UserFilter extends QueryFilter
         $query->whereDate('created_at', '<=', $date);
     }
 
+    public function order($query, $value)
+    {
+        $query->orderBy($value, $this->valid['direction'] ?? 'asc');
+    }
+
+    public function direction($query, $value)
+    {
+
+    }
 }

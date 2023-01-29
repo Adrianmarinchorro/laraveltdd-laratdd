@@ -12,5 +12,17 @@ class QueryBuilder extends Builder
     {
         $this->addBinding($subquery->getBindings());
         $this->where(DB::raw("({$subquery->toSql()})"), $operator, $value);
+
+        return $this;
     }
+
+    public function onlyTrashedIf($value)
+    {
+        if($value){
+            $this->onlyTrashed();
+        }
+
+        return $this;
+    }
+    
 }
