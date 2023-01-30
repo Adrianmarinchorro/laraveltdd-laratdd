@@ -19,7 +19,7 @@ class UserController extends Controller
                     $query->doesntHave('team');
                 }
             })
-            ->filterBy($userFilter, request()->only(['state', 'role', 'search', 'skills', 'from', 'to', 'order', 'direction']))
+            ->filterBy($userFilter, request()->only(['state', 'role', 'search', 'skills', 'from', 'to', 'order']))
             ->orderByDesc('created_at')
             ->paginate();
 

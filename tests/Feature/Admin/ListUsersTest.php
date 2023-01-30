@@ -120,14 +120,14 @@ class ListUsersTest extends TestCase
         ]);
 
 
-        $this->get('/usuarios?order=first_name&direction=asc')
+        $this->get('/usuarios?order=first_name')
             ->assertSeeInOrder([
                 'Jane Doe',
                 'John Doe',
                 'Richard Roe',
             ]);
 
-        $this->get('/usuarios?order=first_name&direction=desc')
+        $this->get('/usuarios?order=first_name-desc')
             ->assertSeeInOrder([
                 'Richard Roe',
                 'John Doe',
@@ -151,14 +151,14 @@ class ListUsersTest extends TestCase
         ]);
 
 
-        $this->get('/usuarios?order=email&direction=asc')
+        $this->get('/usuarios?order=email')
             ->assertSeeInOrder([
                 'Janedoe@example.com',
                 'Johndoe@example.com',
                 'Richardroe@example.com',
             ]);
 
-        $this->get('/usuarios?order=email&direction=desc')
+        $this->get('/usuarios?order=email-desc')
             ->assertSeeInOrder([
                 'Richardroe@example.com',
                 'Johndoe@example.com',
@@ -185,14 +185,14 @@ class ListUsersTest extends TestCase
         ]);
 
 
-        $this->get('/usuarios?order=created_at&direction=asc')
+        $this->get('/usuarios?order=date')
             ->assertSeeInOrder([
                 'Jane Doe',
                 'Richard Roe',
                 'John Doe',
             ]);
 
-        $this->get('/usuarios?order=created_at&direction=desc')
+        $this->get('/usuarios?order=date-desc')
             ->assertSeeInOrder([
                 'John Doe',
                 'Richard Roe',
@@ -218,7 +218,7 @@ class ListUsersTest extends TestCase
             'created_at' => now()->subDays(3),
         ]);
 
-        $this->get('/usuarios?order=invalid_column&direction=asc')
+        $this->get('/usuarios?order=invalid_column')
             ->assertOk()
             ->assertSeeInOrder([
                 'John Doe',
@@ -226,29 +226,4 @@ class ListUsersTest extends TestCase
                 'Jane Doe',
             ]);
     }
-
-    /** @test */
-    function invalid_direction_query_data_is_ignored_and_default_direction_is_used_instead()
-    {
-        factory(User::class)->create([
-            'first_name' => 'John Doe',
-        ]);
-
-        factory(User::class)->create([
-            'first_name' => 'Jane Doe',
-        ]);
-
-        factory(User::class)->create([
-            'first_name' => 'Richard Roe',
-        ]);
-
-        $this->get('/usuarios?order=first_name&direction=down')
-            ->assertOk()
-            ->assertSeeInOrder([
-                'Jane Doe',
-                'John Doe',
-                'Richard Roe',
-            ]);
-    }
-
 }
