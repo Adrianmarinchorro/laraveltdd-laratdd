@@ -218,6 +218,14 @@ class ListUsersTest extends TestCase
             'created_at' => now()->subDays(3),
         ]);
 
+        $this->get('/usuarios?order=id')
+            ->assertOk()
+            ->assertSeeInOrder([
+                'John Doe',
+                'Richard Roe',
+                'Jane Doe',
+            ]);
+
         $this->get('/usuarios?order=invalid_column')
             ->assertOk()
             ->assertSeeInOrder([
@@ -225,5 +233,22 @@ class ListUsersTest extends TestCase
                 'Richard Roe',
                 'Jane Doe',
             ]);
+
+        $this->get('/usuarios?order=first_name-descendent')
+            ->assertOk()
+            ->assertSeeInOrder([
+                'John Doe',
+                'Richard Roe',
+                'Jane Doe',
+            ]);
+
+        $this->get('/usuarios?order=asc-first_name')
+            ->assertOk()
+            ->assertSeeInOrder([
+                'John Doe',
+                'Richard Roe',
+                'Jane Doe',
+            ]);
+
     }
 }
