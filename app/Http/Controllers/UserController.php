@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\{Profession, Role, Skill, Sortable, User, UserFilter};
+use App\{Profession, Role, Skill, Sortable, User, UserFilter, UserProfile};
 use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
@@ -94,7 +94,10 @@ class UserController extends Controller
         $user = User::onlyTrashed()->where('id', $id)->firstOrFail();
 
         $user->restore();
-        $user->profile()->restore();
+
+        $profile = UserProfile::onlyTrashed()->where('user_id', $id);
+
+        $profile->restore();
 
         return redirect()->route('users.trashed');
     }
