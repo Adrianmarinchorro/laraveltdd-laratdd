@@ -3,7 +3,9 @@
 namespace App;
 
 use App\UserProfile;
+use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
@@ -26,6 +28,7 @@ class User extends Authenticatable
 
     protected $casts = [
         'active' => 'bool',
+        'last_login_at' => 'datetime',
     ];
 
     /**
@@ -58,10 +61,7 @@ class User extends Authenticatable
         return $this->belongsToMany(Skill::class, 'user_skill');
     }
 
-    public function lastLogin()
-    {
-        return $this->hasOne(Login::class)->orderByDesc('created_at');
-    }
+
 
     public function isAdmin()
     {

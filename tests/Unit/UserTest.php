@@ -53,13 +53,16 @@ class UserTest extends TestCase
             'created_at' => '2020-09-15 11:59:59',
         ]);
 
-        $users = User::all();
+        $users = User::withLastLogin()->get();
+
+        // con  esto comprobamos que nos devuelve una cadena pero no es una instancia de carbon (una fecha)
+        $this->assertInstanceOf(Carbon::class, $users->firstWhere('first_name', 'joel')->last_login_at);
 
         // la libreria carbon nos permite crear fechas, $users->firstWhere() nos obtiene el primer usuario que cumpla la condicion y obtenemos a traves de la relacion
         // la propiedad created_at para compararla con el método assertEquals
-        $this->assertEquals(Carbon::parse('2020-09-18 12:31:00'), $users->firstWhere('first_name', 'joel')->lastLogin->created_at);
+        $this->assertEquals(Carbon::parse('2020-09-18 12:31:00'), $users->firstWhere('first_name', 'joel')->last_login_at);
 
-        $this->assertEquals(Carbon::parse('2020-09-15 12:01:00'), $users->firstWhere('first_name', 'ellie')->lastLogin->created_at);
+        $this->assertEquals(Carbon::parse('2020-09-15 12:01:00'), $users->firstWhere('first_name', 'ellie')->last_login_at);
 
         // $this->assertTrue($users->firstWhere('first_name', 'joel')->lastLogin->created_at->eq('2020-09-18 12:31:00'))
 
