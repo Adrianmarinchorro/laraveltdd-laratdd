@@ -1,6 +1,6 @@
 <?php
 
-use App\{Skill, Team, User, Profession, UserProfile};
+use App\{Login, Skill, Team, User, Profession, UserProfile};
 use Illuminate\Database\Seeder;
 
 class UserSeeder extends Seeder
@@ -69,13 +69,12 @@ class UserSeeder extends Seeder
 
         $user->skills()->attach($this->skills->random(rand(0, 7)));
 
-//        factory(UserProfile::class)->create([
-//            'user_id' => $user->id,
-//            'profession_id' => rand(0, 2) ? $this->professions->random()->id : null,
-//        ]);
-
         $user->profile()->update([
             'profession_id' => rand(0, 2) ? $this->professions->random()->id : null,
+        ]);
+
+        factory(Login::class)->times(rand(1,10))->create([
+            'user_id' => $user->id,
         ]);
     }
 }

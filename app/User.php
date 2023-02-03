@@ -58,6 +58,11 @@ class User extends Authenticatable
         return $this->belongsToMany(Skill::class, 'user_skill');
     }
 
+    public function lastLogin()
+    {
+        return $this->hasOne(Login::class)->orderByDesc('created_at');
+    }
+
     public function isAdmin()
     {
         return $this->role === 'admin';
