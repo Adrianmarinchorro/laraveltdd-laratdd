@@ -13,8 +13,10 @@
     </th>
     <td>{{ $user->email }}</td>
     <td>
-        <span class="note">Registro: {{ $user->created_at->format('d/m/Y') }}</span>
-        <span class="note">Último login: {{ optional($user->last_login_at)->format('d/m/Y') ?: 'N/A'}}</span>
+        <span class="note">{{ $user->created_at->format('d/m/Y') }}</span>
+    </td>
+    <td>
+        <span class="note">{{ optional($user->last_login_at)->format('d/m/Y') ?: 'N/A'}}</span>
     </td>
     <td class="text-right">
         @if ($user->trashed())
