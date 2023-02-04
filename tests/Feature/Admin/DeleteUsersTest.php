@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Admin;
 
+use App\Login;
 use App\Skill;
 use App\User;
 use App\UserProfile;
@@ -32,6 +33,10 @@ class DeleteUsersTest extends TestCase
         ]);
 
         $this->assertSoftDeleted('user_profiles', [
+            'user_id' => $user->id,
+        ]);
+
+        $this->assertSoftDeleted('user_skill', [
             'user_id' => $user->id,
         ]);
 
@@ -85,6 +90,34 @@ class DeleteUsersTest extends TestCase
             'id' => $user->id,
             'deleted_at' => null
         ]);
+    }
+
+    /** @test */
+    function it_can_delete_a_user_with_logins()
+    {
+
+        $user = factory(User::class)->create([
+            'deleted_at' => now()
+        ]);
+
+        factory(Login::class)->create([
+            'user_id' => $user->id
+        ]);
+
+        $this->assertDatabaseHas('users', [
+            'id' => $user->id,
+        ]);
+
+        $this->assertDatabaseHas('logins', [
+            'user_id' => $user->id,
+        ]);
+
+        $this->delete('usuarios/' . $user->id)
+            ->assertRedirect(route('users.trashed'));
+
+        $this->assertDatabaseEmpty('users');
+
+        $this->assertDatabaseEmpty('logins');
     }
 
 }

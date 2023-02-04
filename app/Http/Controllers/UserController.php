@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\{Profession, Role, Skill, Sortable, User, UserFilter, UserProfile};
+use Illuminate\Support\Facades\DB;
+use App\{Profession, Role, Skill, Sortable, User, UserProfile};
 use App\Http\Requests\{CreateUserRequest, UpdateUserRequest};
 
 class UserController extends Controller
@@ -75,8 +76,8 @@ class UserController extends Controller
 
     public function trash(User $user)
     {
+        //$user->profile()->delete(); // elimina el perfil de forma logica.
         $user->delete();
-        $user->profile()->delete(); // elimina el perfil de forma logica.
 
         return redirect()->route('users.index');
     }

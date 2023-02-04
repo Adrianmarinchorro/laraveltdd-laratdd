@@ -86,4 +86,17 @@ class User extends Authenticatable
         return "{$this->first_name} {$this->last_name}";
     }
 
+    public function delete()
+    {
+        DB::transaction(function () {
+            if(parent::delete()) {
+                $this->profile()->delete();
+
+                DB::table('user_skill')
+                    ->where('user_id', $this->id)
+                    ->update(['deleted_at'=> now()]);
+            }
+        });
+    }
+
 }
